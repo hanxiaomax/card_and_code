@@ -5,11 +5,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>电子名片-编辑内容</title>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/default.css">
   <link rel="stylesheet" type="text/css" href="css/electronic_edit.css">
   <link rel="stylesheet" type="text/css" href="css/icomoon.css">
-  <link rel="stylesheet" type="text/css" href="css/jasny-bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/jasny-bootstrap.min.css"> -->
+
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/electronic_edit.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/jasny-bootstrap.min.css")}}>
+
 </head>
 <style type="text/css">
 .bottom {
@@ -47,7 +54,8 @@
           <div class="portrait-positioner">
             <div id="headpic" class="fileinput fileinput-new" data-provides="fileinput">
             <div  class="fileinput-preview btn-file" type="file" data-trigger="fileinput" style="width: 80px; height: 80px;">
-              <img id="image" src="images/head.png" class="img-circle" />
+
+              <img id="image" src={{url_for('static',filename="images/head.png")}} class="img-circle" />
             </div>
             <div>
               <span style="display:none; " class="btn btn-default btn-file"><span class="fileinput-new"></span><span class="fileinput-exists"></span><input type="file" ></span>
@@ -87,7 +95,7 @@
           <input type="text" class="form-control" placeholder="邮箱">
         </div>
       </div>
-      <div class="form-group form-group-collapse" id="basic-contact">
+      <div class="form-group form-group-collapse" id="basic-contact" name="fax">
         <div class="input-group width-100">
           <div class="input-group-btn width-30">
             <button type="button" id="add-btn" class="btn btn-none btn-icon col-xs-4"><span class="icon-add_1"></span></button>
@@ -123,7 +131,7 @@
           <input type="text" class="form-control" placeholder="地址">
         </div>
       </div>
-      <div class="form-group form-group-collapse form-end-2" id="basic-contact">
+      <div class="form-group form-group-collapse form-end-2" id="basic-contact" name="social">
         <div class="input-group width-100">
           <div class="input-group-btn width-30">
             <button type="button" id="add-btn" class="btn btn-none btn-icon col-xs-4"><span class="icon-add_1"></span></button>
@@ -173,7 +181,7 @@
         <div class="fileinput fileinput-new" data-provides="fileinput">
             <div  class="fileinput-preview btn-file" type="file" data-trigger="fileinput" style="width: 127px; height: 127px;">
 
-              <img id="image" src="images/placeholder.png" />
+            <img id="image" src={{url_for('static',filename="images/placeholder.png")}} />
             </div>
             <div>
               <span style="display:none; " class="btn btn-default btn-file"><span class="fileinput-new"></span><span class="fileinput-exists"></span><input type="file" ></span>
@@ -184,10 +192,11 @@
       <div class="row">
         <div class="bottom">
           <div class="form-group btn-submit" style="margin-bottom: -15px">
-        <center><a href="electronic_finish.html" type="submit" class="btn btn-submit width-100" onclick="finished(this)">完成编辑</a></center>
+        <center><a href={{url_for('electronic_finish',user_id=user_id)}} type="submit" id="submit" class="btn btn-submit width-100">完成编辑</a></center>
       </div>
         </div>
       </div>
+      <!-- href={{url_for('electronic_finish',user_id=user_id)}} -->
 <!-- electronic_finish.html -->
       <!-- form-end-5 -->
     </form>
@@ -357,16 +366,53 @@
       </div>
     </div>
   </div>
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="js/jquery-1.10.2.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/jasny-bootstrap.min.js"></script>
-  <script type="text/javascript">
 
-       $(function(){
-          fillForm()
-       });
+  <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+  <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
+  <script src={{url_for('static',filename="js/jasny-bootstrap.min.js")}}></script>
+  <script src={{url_for('static',filename="js/jquery.json.min.js")}}></script>
+
+<script type= "text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
+<script type="text/javascript">
+        $(function(){
+
+        $.get($SCRIPT_ROOT + "/_getCardDetail",
+          {
+            user_id : {{user_id}}
+          },
+          function(data){
+            fillForm(data)
+        });
+      });
+
+        function fillForm (data) {
+          var name = data.name
+          var corp = data.corp
+          var position = data.position
+          $("#form").html(sessionStorage.page_form)
+          $("#basic-info").find("input[type='text']:eq(0)").val(name)
+          $("#basic-info").find("input[type='text']:eq(1)").val(corp)
+          $("#basic-info").find("input[type='text']:eq(2)").val(position)
+          $.each(data.info,function(){
+            // var type = this.type
+            // var title = this.title
+            var text = this.text
+            $(".form-group-collapse:eq("+this.index+")").find(".form-control").val(this.text)
+          })
+          $.each(data.intro,function(){
+            var introTitle = this.title
+            var introText = this.text
+            if (introTitle||introText) {
+            $("#introAnchor").html("<div class='contact-item-basic clo-xs-12' data-toggle='modal' data-target='#myModal-intro'><div class='width-100'><p class='item-tag'>"+introTitle+"</p><p class='item-value'  style='word-break:break-all;'>"+introText+"</p></div></div>")
+            $("#selfIntro").remove()
+            };
+          })
+       }
+
+
        //监听头像上传，修改为圆角图片
        $("#headpic").bind("change.bs.fileinput",function(){
           $("#headpic").find("img:first").attr("class","img-circle")
@@ -402,7 +448,7 @@
       function addIntro (obj) {
         $("#myModal-intro").modal('show')
       }
-      //保存并更新个人信息
+      //保存并更新个人简介
       function saveIntro (obj) {
         var content = $(obj).parents(".modal-content")
         title = content.find("input").val()
@@ -410,9 +456,6 @@
         $("#myModal-intro").modal('hide')
         $("#introAnchor").html("<div class='contact-item-basic clo-xs-12' data-toggle='modal' data-target='#myModal-intro'><div class='width-100'><p class='item-tag'>"+title+"</p><p class='item-value'  style='word-break:break-all;'>"+text+"</p></div></div>")
         $("#selfIntro").remove()
-        sessionStorage.infoText = text
-        sessionStorage.infoTitle = title
-
       }
 
 
@@ -464,9 +507,6 @@
         }else{
           p.remove()
         };
-
-
-
       });
       //点击文本标题-->选择新的标题
       $("#form").on("click","button[name='title-btn']",function(){
@@ -490,72 +530,57 @@
         return sessionStorage.getItem(key.toString())
       }
       //获取并储存全部的表单
-      function getAlldata (argument) {
+      //提交表单到服务器
 
+      $("#form").on("click","#submit",function(){
+        saveToSessionStore("page_form",$("#form").html())//保存页面结构
+        var titleArray = new Array();
+        var textArray = new Array();
+        var typeArray = new Array();
+        var infoArray = new Array();
+        var cunstomArray = new Array();
         var name = $("#basic-info").find("input[type='text']:eq(0)").val()
         var corp = $("#basic-info").find("input[type='text']:eq(1)").val()
         var position = $("#basic-info").find("input[type='text']:eq(2)").val()
-        saveToSessionStore("name",name)
-        saveToSessionStore("corp",corp)
-        saveToSessionStore("position",position)
-        var count = 0
+
         $(".form-group-collapse").each(function(){
-          count++;
-          var index = $(this).index()
+          var index = $(this).index()-1
           var text =$(this).find("input[type='text']").val()
           var title = $(this).find("button[name='title-btn']").find("span:first").html()
-          var type = $(this).attr("name")
-          saveToSessionStore(count,index+"|"+title+"|"+text+"|"+type)
-          sessionStorage.basicCount=count
+          var type = $(this).attr("name")//信息类型
+          var temp = {"title":title,"text":text,"type":type,"index":index}
+          infoArray.push(temp)
         })
+
         $(".customText").each(function(){
-          count++;
-          var index = $(this).index()
           var customTitle = $(this).find(".item-tag").text()
           var customText  = $(this).find(".item-value").text()
-          saveToSessionStore(count,index+"|"+customTitle+"|"+customText)
-          sessionStorage.customCount = count-sessionStorage.basicCount
+          var temp = {"customTitle":customTitle,"customText":customText,"type":"custom"}
+          cunstomArray.push(temp)
         });
-        sessionStorage.page_form=$("#form").html()
-      }
-      //根据缓存重新填写表格
-      function fillForm (argument) {
-        //恢复页面结构
-        $("#form").html(sessionStorage.page_form)
-        var name = getFromSessionStore ("name");
-        var corp = getFromSessionStore ("corp");
-        var position = getFromSessionStore ("position");
-        var text  = sessionStorage.infoText;
-        var title = sessionStorage.infoTitle;
-        $("#basic-info").find("input[type='text']:eq(0)").val(name)
-        $("#basic-info").find("input[type='text']:eq(1)").val(corp)
-        $("#basic-info").find("input[type='text']:eq(2)").val(position)
-        if (text||title) {
-          $("#introAnchor").html("<div class='contact-item-basic clo-xs-12' data-toggle='modal' data-target='#myModal-intro'><div class='width-100'><p class='item-tag'>"+title+"</p><p class='item-value'  style='word-break:break-all;'>"+text+"</p></div></div>")
-        $("#selfIntro").remove()
-        };
-        var count=0
-        //基础表单
-        $(".form-group-collapse").each(function(){
-          count++;
-          var text = getFromSessionStore (count);
-          if (text) {
-            $(this).find("input[type='text']").val(text.split("|")[2]);
-          };
+
+        var intro_title = $("#introAnchor").find('.item-tag').text()
+        var intro_text = $("#introAnchor").find('.item-value').text()
+
+        var introDic = {"title":intro_title,"text":intro_text,"type":"intro"}
+
+        $.post($SCRIPT_ROOT+"/_saveContact/",
+          {
+            id:"1",
+            name:name,
+            corp:corp,
+            position:position,
+            info:$.toJSON(infoArray),
+            intro:$.toJSON(introDic),
+            custom:$.toJSON(cunstomArray)
+          },
+          function(){
+
+            return true
         });
-        //自定义
-        $(".form-group-collapse").each(function(){
-          count++;
-          var text = getFromSessionStore (count);
-          if (text) {
-            $("#customText").find(".item-tag").val(text.split("|")[1]);
-            $("#customText").find(".item-value").val(text.split("|")[2]);
-          };
-        });
-       }
-      function finished (obj) {
-        getAlldata()
-      }
+        return true
+        })
+
   </script>
 </body>
 </html>

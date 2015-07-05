@@ -15,3 +15,5 @@ UPLOAD_FOLDER = basedir+'/uploads/' #should use basedir
 MAX_CONTENT_LENGTH=2*1024*1024
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])#TODO:make user aware
 
+#for qrcodes
+QRCODES_FOLDER = basedir+'/app/static/qrcodes/' #should use basedir

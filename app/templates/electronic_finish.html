@@ -5,10 +5,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>电子名片-完成编辑</title>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/default.css">
-  <link rel="stylesheet" type="text/css" href="css/electronic_finish.css">
-  <link rel="stylesheet" type="text/css" href="css/icomoon.css">
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/electronic_finish.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/jasny-bootstrap.min.css")}}>
 </head>
 <style type="text/css">
 .modal-backdrop.in {
@@ -50,7 +51,7 @@ text-align: center;font-size:23px; }
       <div class="content-top col-xs-12">
         <div class="width-70 pull-left">
           <div class="width-40 pull-left div-portrait">
-            <img src="images/ybl.png" class="img-circle portrait" />
+            <img src={{url_for('static',filename="images/ybl.png")}} class="img-circle portrait" />
           </div>
           <div class="width-60 pull-left div-basic-info">
             <p class="name"></p>
@@ -60,85 +61,29 @@ text-align: center;font-size:23px; }
         <div class="width-30 pull-right">
           <div class="small-thumb pull-right qr-thumb circle">
             <a type="button" data-toggle="modal" data-target="#myModal-qr">
-              <img src="images/microbots.png" />
+              <img src={{url_for('static',filename="images/microbots.png")}} />
             </a>
           </div>
           <div class="small-thumb pull-right">
-            <img src="images/logo.png" class="img-circle" />
+            <img src={{url_for('static',filename="images/logo.png")}} class="img-circle" />
           </div>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="content-middle col-xs-12">
-        <!-- <div class="contact-item-basic">
-          <div class="pull-left width-70">
-            <p class="item-tag">电话</p>
-            <p class="item-value">152-5041-3229</p>
-          </div>
-          <div class="pull-right width-30 icon-group">
-            <div class="pull-right div-icon-link">
-              <a href="" class="icon-message icon-button"></a>
-            </div>
-            <div class="pull-right div-icon-link">
-              <a href="" class="icon-phone icon-button"></a>
-            </div>
-          </div>
-          <div class="clear"></div>
-        </div>
-        <div class="contact-item-basic">
-          <div class="pull-left width-80">
-            <p class="item-tag">邮箱</p>
-            <p class="item-value">yang.bl@qq.com</p>
-          </div>
-          <div class="pull-right width-20 icon-group">
-            <div class="pull-right div-icon-link">
-              <a href="" class="icon-mail icon-button"></a>
-            </div>
-          </div>
-          <div class="clear"></div>
-        </div>
-        <div class="contact-item-basic">
-          <div class="pull-left width-80">
-            <p class="item-tag">地址</p>
-            <p class="item-value">XXXXXXXXXXXXXXXXXXXX</p>
-          </div>
-          <div class="pull-right width-20 icon-group">
-            <div class="pull-right div-icon-link">
-              <a href="" class="icon-address icon-button"></a>
-            </div>
-          </div>
-          <div class="clear"></div>
-        </div>
-        <div class="contact-item-basic">
-          <div class="pull-left width-80">
-            <p class="item-tag">博客</p>
-            <p class="item-value">http://blog.sina.com.cn/12345678</p>
-          </div>
-          <div class="pull-right width-20 icon-group">
-            <div class="pull-right div-icon-link">
-              <a href="" class="icon-link icon-button"></a>
-            </div>
-          </div>
-          <div class="clear"></div>
-        </div> -->
-        <!-- <div class="contact-item-basic">
-          <div class="width-100">
-            <p class="item-tag">个人简介</p>
-            <p class="item-value">这里有一点简短的介绍。看看换行的效果怎么样。总之我是介绍介绍~</p>
-          </div>
-        </div> -->
+        <!--  -->
       </div>
     </div>
   <div class="bottom fixed-bottom">
     <center class="width-20 pull-left block-btn ">
-      <a href="electronic_edit.html"><span class="icon-edit icon-button2"></span></a>
+      <a href={{url_for('electronic_edit',user_id=user_id)}}><span class="icon-edit icon-button2"></span></a>
     </center>
     <center class="width-20 pull-left block-btn ">
       <a href="" data-toggle="modal" data-target="#mask"><span class="icon-share icon-button2" ></span></a>
     </center>
     <center class="width-60 pull-left block-btn-primary ">
-      <a href="card.html">制作纸质名片 &gt;</a>
+      <a href={{url_for('card',user_id=user_id)}}>制作纸质名片 &gt;</a>
     </center>
   </div>
   </div>
@@ -150,7 +95,7 @@ text-align: center;font-size:23px; }
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <div class="width-40 pull-left div-portrait">
-            <img src="images/ybl.png" class="img-circle portrait" />
+            <img src={{url_for('static',filename="images/ybl.png")}} class="img-circle portrait" />
           </div>
           <div class="width-50 pull-left div-basic-info">
             <p class="name">杨宝玲</p>
@@ -159,7 +104,7 @@ text-align: center;font-size:23px; }
           <div class="clear"></div>
         </div>
         <center class="modal-body">
-          <img src="images/qrcode_for_gh_04c5465ab2ce_258.jpg" />
+          <img src={{url_for('static',filename="images/qrcode_for_gh_04c5465ab2ce_258.jpg")}} />
         </center>
         <div class="modal-footer">
           <p>扫一扫获得电子名片。长按保存二维码，可打印于名片、工卡等任何地方。</p>
@@ -169,7 +114,7 @@ text-align: center;font-size:23px; }
   </div>
   <div id="mask" class="modal" >
     <div class="width-100 ">
-      <img class="pull-right" src="images/分享箭头.png">
+      <img class="pull-right" src={{url_for('static',filename="images/分享箭头.png")}}>
 
     </div>
     <div class="width-100 pull-right">
@@ -179,10 +124,15 @@ text-align: center;font-size:23px; }
     </div>
 
   </div>
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="js/jquery-1.10.2.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="js/bootstrap.min.js"></script>
+
+  <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+  <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
+
+<script type= "text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
+
   <script type="text/javascript">
 
   function close (argument) {
