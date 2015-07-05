@@ -13,6 +13,8 @@ class User(db.Model):
     corp = db.Column(db.String(32),index = True)
     name = db.Column(db.String(32),index = True)
     qrcode = db.Column(db.String(128),index = True)
+    headpic = db.Column(db.String(128),index = True)
+    logo = db.Column(db.String(128),index = True)
 
     def is_authenticated():
         return True

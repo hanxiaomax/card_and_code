@@ -29,7 +29,6 @@ class Tools(object):
         "intro":intro,
         "custom":custom
         }
-        print dic["info"]
         return jsonify(dic)
 
 

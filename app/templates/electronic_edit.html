@@ -48,17 +48,16 @@
 </style>
 <body>
   <div class="container">
-    <form class="form-horizontal" id="form">
+    <form class="form-horizontal" id="form" enctype="multipart/form-data" method="post">
       <div class="form-group form-end-1">
         <div class="width-30 pull-left div-portrait">
           <div class="portrait-positioner">
-            <div id="headpic" class="fileinput fileinput-new" data-provides="fileinput">
-            <div  class="fileinput-preview btn-file" type="file" data-trigger="fileinput" style="width: 80px; height: 80px;">
-
+            <div id="headpic" class="fileinput fileinput-new" data-provides="fileinput" >
+            <div  class="fileinput-preview btn-file input" type="file"  data-trigger="fileinput" style="width: 80px; height: 80px;">
               <img id="image" src={{url_for('static',filename="images/head.png")}} class="img-circle" />
             </div>
             <div>
-              <span style="display:none; " class="btn btn-default btn-file"><span class="fileinput-new"></span><span class="fileinput-exists"></span><input type="file" ></span>
+              <span style="display:none; " class="btn btn-default btn-file"><span class="fileinput-new"></span><span class="fileinput-exists"></span><input type="file" name="file"/ ></span>
             </div>
           </div>
           </div>
@@ -178,22 +177,20 @@
       <!-- form-end-4 -->
       <div class="form-group div-file-input form-end-4">
       <p style="margin-bottom: 5px;color: #666">公司Logo</p>
-        <div class="fileinput fileinput-new" data-provides="fileinput">
-            <div  class="fileinput-preview btn-file" type="file" data-trigger="fileinput" style="width: 127px; height: 127px;">
-
-            <img id="image" src={{url_for('static',filename="images/placeholder.png")}} />
+        <div id="logopic" class="fileinput fileinput-new" data-provides="fileinput" >
+            <div  class="fileinput-preview btn-file input" type="file"  data-trigger="fileinput" style="width: 127px; height: 127px;">
+              <img id="image" src={{url_for('static',filename="images/placeholder.png")}}/>
             </div>
             <div>
-              <span style="display:none; " class="btn btn-default btn-file"><span class="fileinput-new"></span><span class="fileinput-exists"></span><input type="file" ></span>
+              <span style="display:none; " class="btn btn-default btn-file"><span class="fileinput-new"></span><span class="fileinput-exists"></span><input type="file" name="logo" /></span>
             </div>
-          </div>
-      </div>
+        </div>
       <!-- form-end-4 again -->
       <div class="row">
         <div class="bottom">
           <div class="form-group btn-submit" style="margin-bottom: -15px">
-        <center><a href={{url_for('electronic_finish',user_id=user_id)}} type="submit" id="submit" class="btn btn-submit width-100">完成编辑</a></center>
-      </div>
+          <center><input value="完成编辑" type="submit" id="submit" class="btn btn-submit width-100"/></center>
+          </div>
         </div>
       </div>
       <!-- href={{url_for('electronic_finish',user_id=user_id)}} -->
@@ -378,7 +375,6 @@
 
 <script type="text/javascript">
         $(function(){
-
         $.get($SCRIPT_ROOT + "/_getCardDetail",
           {
             user_id : {{user_id}}
@@ -387,7 +383,6 @@
             fillForm(data)
         });
       });
-
         function fillForm (data) {
           var name = data.name
           var corp = data.corp
@@ -491,22 +486,8 @@
       });
       $("#form").on("click","button[id='del-btn']",function(){
           var p = $(this).parents(".form-group-collapse");
-          if (sessionStorage.length>0) {
-            for (var i = 0; i < sessionStorage.length; i++) {
-            var key = sessionStorage.key(i)
-            var value =sessionStorage.getItem(key)
-            if(value.split("|")[0]==p.index())
-            {
-              sessionStorage.removeItem(key)
-
-              p.remove();
-              sessionStorage.page_form=$("#form").html()
-            }
-            p.remove();
-          };
-        }else{
           p.remove()
-        };
+
       });
       //点击文本标题-->选择新的标题
       $("#form").on("click","button[name='title-btn']",function(){
@@ -529,11 +510,10 @@
       function getFromSessionStore (key) {
         return sessionStorage.getItem(key.toString())
       }
-      //获取并储存全部的表单
-      //提交表单到服务器
 
+      //提交表单到服务器
       $("#form").on("click","#submit",function(){
-        saveToSessionStore("page_form",$("#form").html())//保存页面结构
+        //保存页面结构
         var titleArray = new Array();
         var textArray = new Array();
         var typeArray = new Array();
@@ -563,23 +543,25 @@
         var intro_text = $("#introAnchor").find('.item-value').text()
 
         var introDic = {"title":intro_title,"text":intro_text,"type":"intro"}
-
         $.post($SCRIPT_ROOT+"/_saveContact/",
           {
-            id:"1",
+            id:{{user_id}},
             name:name,
             corp:corp,
             position:position,
             info:$.toJSON(infoArray),
             intro:$.toJSON(introDic),
-            custom:$.toJSON(cunstomArray)
+            custom:$.toJSON(cunstomArray),
           },
-          function(){
 
+          function(){
+            saveToSessionStore("page_form",$("#form").html())
             return true
         });
         return true
         })
+
+        //uuid生成器
 
   </script>
 </body>

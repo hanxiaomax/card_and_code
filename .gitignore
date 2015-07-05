@@ -1,2 +1,5 @@
 *.pyc
 env/
+*.png
+*.jpg
+*.jpeg
