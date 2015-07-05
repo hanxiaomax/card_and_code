@@ -5,6 +5,7 @@ from app import app,db
 import os
 import json
 import sqlalchemy.exc
+from tools import Tools
 
 upload_path = app.config["UPLOAD_FOLDER"]
 
@@ -52,29 +53,4 @@ def card(user_id):
 @app.route('/_getCardDetail')
 def _getCardDetail():
     user_id = request.args.get("user_id")
-    user = User.getUser(user_id)
-    c = Contact.query.filter(db.or_(user_id==user_id)).all()
-    info=[]
-    intro=[]
-    custom=[]
-    for item in c:
-        if item._type == "intro":
-            temp={"title":item.title,"text":item.text,"type":item._type}
-            intro.append(temp)
-        elif item._type == "custom":
-            temp={"title":item.title,"text":item.text,"type":item._type}
-            custom.append(temp)
-        else:
-            temp={"title":item.title,"text":item.text,"type":item._type,"index":item.index}
-            info.append(temp)
-
-    dic = {
-    "name":user.name,
-    "corp":user.corp,
-    "position":user.position,
-    "info":info,
-    "intro":intro,
-    "custom":custom
-    }
-    print dic["info"]
-    return jsonify(dic)
+    return Tools.getcarddetail(user_id)
