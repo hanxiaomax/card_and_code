@@ -49,7 +49,7 @@
           <div class="portrait-positioner">
             <div id="headpic" class="fileinput fileinput-new" data-provides="fileinput" >
             <div  class="fileinput-preview btn-file input img-circle" type="file"  data-trigger="fileinput" style="width: 80px; height: 80px;">
-              <img id="image" src={{url_for('static',filename="images/head.png")}} class="img-circle" />
+              <img id="image-head" src={{url_for('static',filename="images/head.png")}} class="img-circle" />
             </div>
             <div>
               <span style="display:none; " class="btn btn-default btn-file"><span class="fileinput-new"></span><span class="fileinput-exists"></span><input type="file" name="file"/ ></span>
@@ -174,7 +174,7 @@
       <p style="margin-bottom: 5px;color: #666">公司Logo</p>
         <div id="logopic" class="fileinput fileinput-new" data-provides="fileinput" >
             <div  class="fileinput-preview btn-file input" type="file"  data-trigger="fileinput" style="width: 127px; height: 127px;">
-              <img id="image" src={{url_for('static',filename="images/placeholder.png")}}/>
+              <img id="image-logo" src={{url_for('static',filename="images/placeholder.png")}}/>
             </div>
             <div>
               <span style="display:none; " class="btn btn-default btn-file"><span class="fileinput-new"></span><span class="fileinput-exists"></span><input type="file" name="logo" /></span>
@@ -376,6 +376,9 @@
           },
           function(data){
             fillForm(data)
+            // 恢复页面结构之后重新替换图片
+            $("#headpic").find("img").attr('src',"{{url_for('static',filename='images/head.png')}}")
+            $("#logopic").find("img").attr('src',"{{url_for('static',filename='images/placeholder.png')}}")
         });
       });
         function fillForm (data) {

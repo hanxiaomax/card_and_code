@@ -27,7 +27,7 @@ def allowed_file(filename):
 @app.route('/user<int:user_id>_edit/',methods=['GET', 'POST'])
 def electronic_edit(user_id):
     if request.method == 'POST':
-        print "electronic_edit POST"
+        # print "electronic_edit POST"
         user = User.getUser(user_id)
         if user.logo and os.path.exists(user.logo):
             os.remove(user.logo)
@@ -35,7 +35,7 @@ def electronic_edit(user_id):
             os.remove(user.headpic)
         file = request.files['file']
         logo = request.files["logo"]
-        time = str(datetime.today()).replace(" ","_").replace(":","_").replace(".","_")
+        time = str(datetime.today()).replace(" ","_").replace(":","_").replace(".","_")#防止从缓存加载
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file_path = os.path.join(upload_path, "user_id_"+str(user_id)+"_"+time+filename)
@@ -56,7 +56,7 @@ def electronic_edit(user_id):
 #保存名片信息到数据库
 @app.route('/_saveContact/',methods=["GET","POST"])
 def saveContact():
-    print "saveContact"#首先进入
+    # print "saveContact"
     user_id = int(request.form['id'])
     info = json.loads(request.form["info"])
     intro = json.loads(request.form["intro"])
@@ -90,12 +90,12 @@ def electronic_finish(user_id):
     if user.logo :
         logo = os.path.basename(user.logo)
     else:
-        print "using default logo"
+        # print "using default logo"
         logo = "default_logo.png"
     if user.headpic :
         headpic = os.path.basename(user.headpic)
     else:
-        print "using default head"
+        # print "using default head"
         headpic = "default_headpic.png"
 
     return render_template("electronic_finish.html",user_id=user_id,qrcode=qrcode,logo=logo,headpic=headpic)
