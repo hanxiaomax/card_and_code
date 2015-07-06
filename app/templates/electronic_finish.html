@@ -111,8 +111,8 @@
             <img src={{url_for('static',filename="uploads/"~ headpic  )}} class="img-circle portrait" />
           </div>
           <div class="width-50 pull-left div-basic-info">
-            <p class="name">杨宝玲</p>
-            <p><span class="company">东南大学</span><span class="title">学生</span></p>
+            <p class="name" id="modal-name">杨宝玲</p>
+            <p><span class="company" id="modal-corp">东南大学</span><span class="title" id="modal-position">学生</span></p>
           </div>
           <div class="clear"></div>
         </div>
@@ -163,6 +163,9 @@
           $(".content-top").find(".name").text(name)
           $(".content-top").find(".company").text(corp)
           $(".content-top").find(".title").text(position)
+          $("#modal-name").text(name)
+          $("#modal-corp").text(corp)
+          $("#modal-position").text(position)
           //联系方式
           $.each(data.info,function(){
             var type = this.type
