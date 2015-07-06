@@ -8,11 +8,11 @@
     <!-- ↓ 标题 -->
     <title>编辑模板</title>
     <!-- ↓ 默认引用bootstrap、icomoon字体以及default样式 -->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/icomoon.css">
-    <link rel="stylesheet" type="text/css" href="css/card.css">
-    <link rel="stylesheet" type="text/css" href="css/default.css">
-    <link rel="stylesheet" type="text/css" href="css/edit.css">
+    <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+    <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+    <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/card.css")}}>
+    <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+    <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/edit.css")}}>
 
     <!-- ↓ 自定义css，名称最好和html相同 -->
 
@@ -53,7 +53,7 @@
                		<!--  <div class="underline1 "></div> -->
                 		<div class="icontop2"><img src="images/二维码1.png"></div>
                 	<!-- <img class="pull-left" src="images/扫一扫.jpg"> -->
-              		</div>			   		
+              		</div>
 			   		<div class="card2-content0">
               			<div class="card-biaoti biaoti1 pull-top">姓名</div>
                 		<div name="position" class="card-fubiaoti fubiaoti1">公司 职位</div>
@@ -253,7 +253,7 @@
 				</div>
             </div>
 		</div>
- --> 
+ -->
 			<!-- <div  class="dingwei" id="back3">
 				<div class = "pull-left back3-bg0">
 				<div class = "back3-bg background-yanse"></div>
@@ -308,8 +308,8 @@
 
 
     <!-- ↓jQuery和bootstrap的js效果，请保留，顺序不动 -->
-   <script src="js/jquery-1.10.2.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+    <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
     <script type="text/javascript">
     function myfunction(){
     var kk=sessionStorage.cardtype;
