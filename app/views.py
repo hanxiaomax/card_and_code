@@ -27,20 +27,22 @@ def allowed_file(filename):
 def electronic_edit(user_id):
     if request.method == 'POST':
         user = User.getUser(user_id)
-        os.remove(user.logo)
-        os.remove(user.headpic)
+        if os.path.exists(user.logo):
+            os.remove(user.logo)
+        if os.path.exists(user.headpic):
+            os.remove(user.headpic)
         file = request.files['file']
         logo = request.files["logo"]
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file_path = os.path.join(upload_path, "user_id_"+str(user_id)+"_"+filename)
-            user.headpic = file_path
+            user.headpic = "user_id_"+str(user_id)+"_"+filename
             file.save(file_path)
             db.session.commit()
         if logo and allowed_file(logo.filename):
             filename = secure_filename(logo.filename)
             logo_path = os.path.join(upload_path, "user_id_"+str(user_id)+"_"+filename)
-            user.logo = logo_path
+            user.logo = "user_id_"+str(user_id)+"_"+filename
             logo.save(logo_path)
             db.session.commit()
         return redirect(url_for("electronic_finish",user_id=user_id))
@@ -68,7 +70,7 @@ def saveContact():
     for i in custom:
         c = Contact(_type = i["type"] ,title = i["customTitle"] , text = i["customText"],user_id=user_id )
         db.session.add(c)
-    user.makeQrcode(user)
+    user.makeQrcode(user)#生成二维码
     db.session.commit()
     return redirect(url_for("electronic_finish",user_id=user_id))
 
@@ -77,7 +79,8 @@ def saveContact():
 
 @app.route('/user<int:user_id>_finish/')
 def electronic_finish(user_id):
-    return render_template("electronic_finish.html",user_id=user_id)
+    user = User.getUser(user_id)
+    return render_template("electronic_finish.html",user_id=user_id,user=user)
 
 @app.route('/user<int:user_id>_card/')
 def card(user_id):

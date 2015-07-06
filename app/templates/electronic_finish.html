@@ -63,7 +63,8 @@
       <div class="content-top col-xs-12">
         <div class="width-70 pull-left">
           <div class="width-40 pull-left div-portrait">
-            <img src={{url_for('static',filename="images/ybl.png")}} class="img-circle portrait" />
+          <!-- user是数据库中的一个用户，headpic，logo，qrcode是三个图像 -->
+            <img src={{url_for('static',filename="uploads/"~ user.headpic )}} class="img-circle portrait" />
           </div>
           <div class="width-60 pull-left div-basic-info">
             <p class="name"></p>
@@ -77,7 +78,7 @@
             </a>
           </div>
           <div class="small-thumb pull-right">
-            <img src={{url_for('static',filename="images/logo.png")}} class="img-circle" />
+            <img src={{url_for('static',filename="uploads/"~ user.logo )}} class="img-circle" />
           </div>
         </div>
       </div>
@@ -107,7 +108,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <div class="width-40 pull-left div-portrait">
-            <img src={{url_for('static',filename="images/ybl.png")}} class="img-circle portrait" />
+            <img src={{url_for('static',filename="qrcodes/"~ user.qrcode )}} class="img-circle portrait" />
           </div>
           <div class="width-50 pull-left div-basic-info">
             <p class="name">杨宝玲</p>
@@ -116,7 +117,7 @@
           <div class="clear"></div>
         </div>
         <center class="modal-body">
-          <img src={{url_for('static',filename="images/qrcode_for_gh_04c5465ab2ce_258.jpg")}} />
+          <img src={{url_for('static',filename="qrcodes/"~ user.qrcode )}} />
         </center>
         <div class="modal-footer">
           <p>扫一扫获得电子名片。长按保存二维码，可打印于名片、工卡等任何地方。</p>

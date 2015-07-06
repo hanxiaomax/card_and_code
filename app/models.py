@@ -18,6 +18,7 @@ class User(db.Model):
 
     def is_authenticated():
         return True
+
     @classmethod
     def getUser(cls,id):
         user = cls.query.filter(db.or_(User.id==id)).first()
@@ -39,7 +40,12 @@ class User(db.Model):
         qr.add_data("http://weibo.com/smilingly1989?wvr=3.6&lf=reg")
         qr.make(fit=True)
         img = qr.make_image()
-        img.save(app.config["QRCODES_FOLDER"]+"/"+str(user.id)+".png")
+        path = app.config["QRCODES_FOLDER"]+"/"+str(user.id)+".png"
+
+        img.save(path)
+        self.qrcode = path
+        db.session.commit()
+
         return True
 
 class Friend_Ship(db.Model):
