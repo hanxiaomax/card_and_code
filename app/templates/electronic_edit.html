@@ -5,11 +5,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>电子名片-编辑内容</title>
-<!--   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/default.css">
-  <link rel="stylesheet" type="text/css" href="css/electronic_edit.css">
-  <link rel="stylesheet" type="text/css" href="css/icomoon.css">
-  <link rel="stylesheet" type="text/css" href="css/jasny-bootstrap.min.css"> -->
 
   <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
   <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
@@ -53,7 +48,7 @@
         <div class="width-30 pull-left div-portrait">
           <div class="portrait-positioner">
             <div id="headpic" class="fileinput fileinput-new" data-provides="fileinput" >
-            <div  class="fileinput-preview btn-file input" type="file"  data-trigger="fileinput" style="width: 80px; height: 80px;">
+            <div  class="fileinput-preview btn-file input img-circle" type="file"  data-trigger="fileinput" style="width: 80px; height: 80px;">
               <img id="image" src={{url_for('static',filename="images/head.png")}} class="img-circle" />
             </div>
             <div>
@@ -409,9 +404,11 @@
 
 
        //监听头像上传，修改为圆角图片
-       $("#headpic").bind("change.bs.fileinput",function(){
-          $("#headpic").find("img:first").attr("class","img-circle")
-       });
+       // $("#headpic").bind("change.bs.fileinput",function(){
+       //  alert("11")
+       //    $("#headpic").find("img:first").attr("class","img-circle")
+       // });
+
       //自定义文本保存按钮
       function save (obj) {
         var content = $(obj).parents(".modal-content")
