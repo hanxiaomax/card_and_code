@@ -2,6 +2,9 @@
 from app import app,db
 import os
 import qrcode
+from PIL import Image
+from datetime import datetime
+qrcode_folder = app.config["QRCODES_FOLDER"]
 class User(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     username = db.Column(db.String(16),index = True,unique = True)
@@ -25,25 +28,68 @@ class User(db.Model):
         return user
     @classmethod
     def clear(cls,user):
+        user.corp = None
+        user.position = None
+        user.name = None
+        if user.logo and os.path.exists(user.logo):
+            print "remove %s"%(user.logo)
+            os.remove(user.logo)
+            user.logo = None
+        if user.headpic and os.path.exists(user.headpic):
+            print "remove %s"%(user.headpic)
+            os.remove(user.headpic)
+            user.headpic = None
+        if user.qrcode and os.path.exists(user.qrcode):
+            print "remove %s"%(user.qrcode)
+            os.remove(user.qrcode)
+            user.qrcode = None
         contacts =Contact.query.filter(Contact.user_id==user.id).all()
+
         for c in contacts:
             db.session.delete(c)
         db.session.commit()
 
-    def makeQrcode(self,user):
+    def makeQrcode(self,user,qrlogo=None):
+
+
         qr = qrcode.QRCode(
             version=5,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            error_correction=qrcode.constants.ERROR_CORRECT_H,
             box_size=10,
             border=4,
         )
         qr.add_data("http://weibo.com/smilingly1989?wvr=3.6&lf=reg")
         qr.make(fit=True)
         img = qr.make_image()
-        path = app.config["QRCODES_FOLDER"]+"/"+str(user.id)+".png"
+        time = str(datetime.today()).replace(" ","_").replace(":","_").replace(".","_")
+        path = app.config["QRCODES_FOLDER"]+"/"+str(user.id)+time+".png"
 
-        img.save(path)
-        self.qrcode = str(user.id)+".png"
+        if  qrlogo and os.path.exists(qrlogo) :
+            print qrlogo
+            img = img.convert("RGBA")
+            icon = Image.open(qrlogo)
+            # icon = img.convert('RGBA')
+            img_w, img_h = img.size
+            factor = 4
+            size_w = int(img_w / factor)
+            size_h = int(img_h / factor)
+            icon_w, icon_h = icon.size
+            if icon_w > size_w:
+                icon_w = size_w
+            if icon_h > size_h:
+                icon_h = size_h
+            icon = icon.resize((icon_w, icon_h), Image.ANTIALIAS)
+
+            w = int((img_w - icon_w) / 2)
+            h = int((img_h - icon_h) / 2)
+            img.paste(icon, (w, h), icon)
+            img.save(path)
+
+        else:
+            img.save(path)
+
+        self.qrcode = path
+        print "save %s"%(path)
         db.session.commit()
 
         return True
