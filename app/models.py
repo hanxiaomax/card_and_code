@@ -43,7 +43,7 @@ class User(db.Model):
         path = app.config["QRCODES_FOLDER"]+"/"+str(user.id)+".png"
 
         img.save(path)
-        self.qrcode = path
+        self.qrcode = str(user.id)+".png"
         db.session.commit()
 
         return True
