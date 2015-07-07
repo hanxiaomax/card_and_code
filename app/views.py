@@ -1,5 +1,5 @@
 #coding:utf-8
-from flask import render_template,request,redirect,url_for,jsonify
+from flask import render_template,request,redirect,url_for,jsonify,make_response
 from models import Contact,Friend_Ship,User
 from app import app,db
 import os
@@ -8,18 +8,68 @@ import sqlalchemy.exc
 from tools import Tools
 from werkzeug import secure_filename
 from datetime import datetime
+import time
+import hashlib
+from xml.etree import ElementTree
+
 upload_path = app.config["UPLOAD_FOLDER"]
 
-
-@app.route('/index/')
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/',methods=['GET', 'POST'])
+@app.route('/index/', methods=['GET', 'POST'])
 def index():
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>hello</h1>
+    if request.method == "POST":
+        return redirect(url_for("message_handler"))
+    return render_template("token.html",user_id="1")
+    # return "施工中"
 
-    '''
+@app.route('/message/', methods=['GET', 'POST'])
+def message_handler():
+    if request.method == "POST":
+        xml_recv = ElementTree.fromstring(request.data)
+        ToUserName = xml_recv.find("ToUserName").text
+        FromUserName = xml_recv.find("FromUserName").text
+        CreateTime = xml_recv.find("CreateTime").text
+        Event = xml_recv.find("Event").text
+        MsgType = xml_recv.find("MsgType").text
+        reply = "<xml><ToUserName><![CDATA[%s]]></ToUserName>\
+                        <FromUserName><![CDATA[%s]]></FromUserName>\
+                        <CreateTime>%s</CreateTime>\
+                        <MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]>\
+                        </Content><FuncFlag>0</FuncFlag></xml>"
+
+        response = make_response( reply %(ToUserName,FromUserName,CreateTime,"hhhhhhh"))
+        response.content_type = 'application/xml'
+        return response
+
+
+@app.route('/login/', methods=['GET', 'POST'])
+def wechat_auth():
+    """
+    加密/校验流程如下：
+    1. 将token、timestamp、nonce三个参数进行字典序排序
+    2. 将三个参数字符串拼接成一个字符串进行sha1加密
+    3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于微信
+    4. 原样返回echostr
+    """
+    if request.method == "GET":
+        token = "youwillneverknowwhoiamlingfeng"
+        query = request.args
+        signature = query.get('signature')#微信加密签名，结合了后三者
+        timestamp = query.get('timestamp')
+        nonce = query.get('nonce')#随机数
+        echostr = query.get('echostr')#随机字符串
+        s = [timestamp,nonce,token]
+        s.sort()
+        s = "".join(s)
+        if(hashlib.sha1(s).hexdigest() == signature):
+            return echostr
+
+
+
+
+
+
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config["ALLOWED_EXTENSIONS"]
@@ -44,7 +94,7 @@ def electronic_edit(user_id):
             db.session.commit()
         if logo and allowed_file(logo.filename):
             filename = secure_filename(logo.filename)
-            logo_path = os.path.join(upload_path, "user_id_"+str(user_id)+"_"+time+filename)
+            logo_path = os.path.join(upload_path, "user_id_"+str(user_id)+"_"+time+filename.split(".")[0]+"png")
             user.logo = logo_path
             logo.save(logo_path)
             db.session.commit()

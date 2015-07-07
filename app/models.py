@@ -79,10 +79,13 @@ class User(db.Model):
             if icon_h > size_h:
                 icon_h = size_h
             icon = icon.resize((icon_w, icon_h), Image.ANTIALIAS)
-
+            icon = icon.convert("RGBA")
             w = int((img_w - icon_w) / 2)
             h = int((img_h - icon_h) / 2)
+
             img.paste(icon, (w, h), icon)
+
+
             img.save(path)
 
         else:
