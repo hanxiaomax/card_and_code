@@ -8,11 +8,13 @@
         <!-- ↓ 标题 -->
         <title>编辑模板</title>
         <!-- ↓ 默认引用bootstrap、icomoon字体以及default样式 -->
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="css/icomoon.css">
-        <link rel="stylesheet" type="text/css" href="css/default.css">
         <!-- ↓ 自定义css，名称最好和html相同 -->
-        <link rel="stylesheet" type="text/css" href="css/jasny-bootstrap.min.css">
+
+        <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+      <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+
+      <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+
         <style>
         .contact-item-basic {
         min-height: 53px;
@@ -112,7 +114,7 @@
         }
 
         /*.container{
-           
+
         }*/
 
         .container {
@@ -123,7 +125,7 @@
         padding-right: 0;
         position: absolute;
         top: 0px;
-        bottom: 0px; 
+        bottom: 0px;
         background-color: #e5e5e5;
         }
 
@@ -179,7 +181,7 @@
                 <a>仅保存</a>
                 </center>
                 <center class="width-30 pull-left block-btn-primary">
-                <a href="makeOrder.html">立即制作</a>
+                <a href={{url_for('makeOrder',user_id=user_id)}}>立即制作</a>
                 </center>
             </div>
         </div>
@@ -205,9 +207,8 @@
 
 
         <!-- ↓jQuery和bootstrap的js效果，请保留，顺序不动 -->
-        <script src="js/jquery-1.10.2.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/jasny-bootstrap.min.js"></script>
+        <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+    <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
         <script type="text/javascript">
 
         function OnSaveBtn (argument) {

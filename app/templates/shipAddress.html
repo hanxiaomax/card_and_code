@@ -8,9 +8,11 @@
         <!-- ↓ 标题 -->
         <title>收货地址</title>
         <!-- ↓ 默认引用bootstrap、icomoon字体以及default样式 -->
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="css/icomoon.css">
-        <link rel="stylesheet" type="text/css" href="css/default.css">
+
+        <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+
         <!-- ↓ 自定义css，名称最好和html相同 -->
         <style>
         .container {
@@ -21,7 +23,7 @@
         padding-right: 0;*/
         position: absolute;
         top: 0px;
-        bottom: 0px; 
+        bottom: 0px;
         }
         .address{
         font-size: 12px;
@@ -62,6 +64,9 @@
         padding-left: 15px;
         padding-bottom: 0px;
         }
+        .content-bottom {
+        border-top: 0px solid #ccc;
+  }
         </style>
     </head>
     <body>
@@ -69,7 +74,7 @@
             <div class="row ">
                 <div class="btn-group-vertical width-100" id= "button-group">
                     <!-- 按钮 -->
-                    <label id="option1" value="1" name="options" class=" btn btn-block container-address"  style="text-align: left;">
+                    <!-- <label id="option1" value="1" name="options" class=" btn btn-block container-address"  style="text-align: left;">
                         <div class="width-75 pull-left info-box " >
                             <div class="row col-xs-12">
                                 <div id="text" class="width-30 pull-left text">收件人:</div>
@@ -94,19 +99,20 @@
                         <div class="width-20 pull-right block-btn">
                             <center><a class="btn block-btn " href="enterAddress.html"><span class="icon-edit icon-block"></span></a></center>
                         </div>
-                    </label>
+                    </label> -->
                 </div>
-            </div>
-            <div class="content-bottom col-xs-12" style="margin-bottom: 10px;">
+                <div class="content-bottom col-xs-12" style="margin-bottom: 10px;">
                 <center class="width-100 block-btn-primary" style="border-radius: 5px;">
-                <a href="enterAddress.html" onclick="javascript:sessionStorage.from='1'">添加收货地址</a>
+                <a href={{url_for("enterAddress",user_id=user_id)}} onclick="javascript:sessionStorage.from='1'">添加收货地址</a>
                 </center>
             </div>
+            </div>
+
         </div>
     </div>
     <!-- ↓jQuery和bootstrap的js效果，请保留，顺序不动 -->
-    <script src="js/jquery-1.10.2.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+  <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+  <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
     <script type="text/javascript">
     makeBtn("王二小","2222312320","西南小学橘园A1","4")
     makeBtn("王大锤","1123123110","东南大学橘园A1","3")
@@ -118,7 +124,7 @@
         sessionStorage.phone = $("#phone"+addressNum).html()
         sessionStorage.address = $("#address"+addressNum).html()
         sessionStorage.from = '0'
-        location.href = "makeOrder.html"
+        location.href = "{{url_for('makeOrder',user_id=user_id)}}"
     });
     //生成按钮
     function makeBtn (name,phone,address,num) {
@@ -126,7 +132,7 @@
         var phone = phone
         var address= address
         var num = num
-        $("#button-group").append("<label id='option"+num+"' value='"+num+"' name='options' class=' btn btn-block container-address'  style='text-align: left;'><div class='width-75 pull-left info-box ' ><div class='row col-xs-12'><div id='text' class='width-30 pull-left text'>收件人:</div><div id='name"+num+"' class='width-30 pull-left name'>"+name+"</div><div id='phone"+num+"' class='width-40 pull-left phone'>"+phone+"</div><div id='address"+num+"' class='address'>"+address+"</div></div></div><div class='width-20 pull-right block-btn'><center><a class='btn block-btn ' href='enterAddress.html'><span class='icon-edit icon-block'></span></a></center></div></label>")
+        $("#button-group").append("<label id='option"+num+"' value='"+num+"' name='options' class=' btn btn-block container-address'  style='text-align: left;'><div class='width-75 pull-left info-box ' ><div class='row col-xs-12'><div id='text' class='width-30 pull-left text'>收件人:</div><div id='name"+num+"' class='width-30 pull-left name'>"+name+"</div><div id='phone"+num+"' class='width-40 pull-left phone'>"+phone+"</div><div id='address"+num+"' class='address'>"+address+"</div></div></div><div class='width-20 pull-right block-btn'><center><a class='btn block-btn ' href={{url_for('enterAddress',user_id=user_id)}}><span class='icon-edit icon-block'></span></a></center></div></label>")
     }
 
 

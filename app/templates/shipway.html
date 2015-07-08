@@ -8,11 +8,13 @@
         <!-- ↓ 标题 -->
         <title>配送方式</title>
         <!-- ↓ 默认引用bootstrap、icomoon字体以及default样式 -->
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="css/icomoon.css">
-        <link rel="stylesheet" type="text/css" href="css/default.css">
+
         <!-- ↓ 自定义css，名称最好和html相同 -->
-        <link rel="stylesheet" type="text/css" href="css/模板.css">
+        <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/模板.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+
         <style>
          .container {
         width: 100%;
@@ -22,7 +24,7 @@
         padding-right: 0;*/
         position: absolute;
         top: 0px;
-        bottom: 0px; 
+        bottom: 0px;
         }
         .shipper{
         font-size: 12px;
@@ -88,19 +90,19 @@
         </div>
     </div>
     <!-- ↓jQuery和bootstrap的js效果，请保留，顺序不动 -->
-    <script src="js/jquery-1.10.2.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+    <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
 
     <script type="text/javascript">
     $("#6yuan").bind("click",function(){
         sessionStorage.shipper="普通快递";
         sessionStorage.fee="6";
-        location.href = "makeOrder.html"
+        location.href = "{{url_for('makeOrder',user_id=user_id)}}"
     })
     $("#10yuan").bind("click",function(){
         sessionStorage.shipper="顺丰快递";
         sessionStorage.fee="10";
-        location.href = "makeOrder.html"
+        location.href = "{{url_for('makeOrder',user_id=user_id)}}"
     })
     </script>
 

@@ -8,11 +8,12 @@
         <!-- ↓ 标题 -->
         <title>制作名片</title>
         <!-- ↓ 默认引用bootstrap、icomoon字体以及default样式 -->
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="css/icomoon.css">
-        <link rel="stylesheet" type="text/css" href="css/default.css">
         <!-- ↓ 自定义css，名称最好和html相同 -->
-        <link rel="stylesheet" type="text/css" href="css/jasny-bootstrap.min.css">
+
+        <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+
         <style>
 
         .container {
@@ -191,20 +192,20 @@
                 <center><div class="describe-text">名片预览</div></center>
                 <div class="container-preview col-xs-12">
                     <div class="card-preview">
-                       
+
                     </div>
                     <div class="card-preview">
-                       
+
                     </div>
                 </div>
             </div>
-            <div class="row" onclick="javascript:location.href = 'shipAddress.html';">
+            <div class="row" onclick="javascript:location.href = '{{url_for('shipAddress',user_id=user_id)}}';">
                 <div class="container-address " >
                     <span class="width-10 pull-left icon-text icon-address icon-button2" style="margin-top: 15px ;color:#000000;padding-left:10px;"></span>
                     <div class="width-60 pull-left info-box" id="addressArea">
                     </div>
                     <div class="width-20 pull-right btn block-btn ">
-                        <center><a href="shipAddress.html" ><span class="icon-to_right icon-button2 icon-text" id="addressIcon"></span></a></center>
+                        <center><a href={{url_for('shipAddress',user_id=user_id)}} ><span class="icon-to_right icon-button2 icon-text" id="addressIcon"></span></a></center>
                     </div>
                 </div>
             </div>
@@ -233,7 +234,7 @@
         </div>
         <div class="row" >
             <div class="container-ship">
-                <a href="shipway.html"><label id="OnShipWayBtn" class="btn btn-block "  style="text-align: left;">
+                <a href={{url_for('shipway',user_id=user_id)}}><label id="OnShipWayBtn" class="btn btn-block "  style="text-align: left;">
                     <div >
                         <div class=" width-30 pull-left text" >配送方式:</div>
                         <span class="width-10 pull-right text icon-to_right icon-button2" style="font-size: 12pt;margin-top:10px;"></span>
@@ -264,8 +265,8 @@
 
 <!-- 0.16 -->
 <!-- ↓jQuery和bootstrap的js效果，请保留，顺序不动 -->
-<script src="js/jquery-1.10.2.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+<script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
 <script type="text/javascript">
 
         $(function(){

@@ -196,4 +196,26 @@ def _getCardDetail():
 def editcard(user_id):
     return render_template("edit-fang.html",user_id=user_id)
 
+@app.route('/user<int:user_id>_aftercard/')
+def afterEditcard(user_id):
+    return render_template("after_edit.html",user_id=user_id)
+
+@app.route('/user<int:user_id>_makeOrder/')
+def makeOrder(user_id):
+    return render_template("makeOrder.html",user_id=user_id)
+
+@app.route('/user<int:user_id>_shipAddress')
+def shipAddress(user_id):
+    return render_template("shipAddress.html",user_id=user_id)
+
+@app.route('/user<int:user_id>_enterAddress')
+def enterAddress(user_id):
+    return render_template("enterAddress.html",user_id=user_id)
+
+
+@app.route('/user<int:user_id>_shipway')
+def shipway(user_id):
+    return render_template("shipway.html",user_id=user_id)
+
+
 
