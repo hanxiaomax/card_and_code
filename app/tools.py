@@ -28,7 +28,8 @@ class Tools(object):
         "position":user.position,
         "info":info,
         "intro":intro,
-        "custom":custom
+        "custom":custom,
+        "logoText":user.logoText
         }
         return jsonify(dic)
 

@@ -18,6 +18,7 @@ class User(db.Model):
     qrcode = db.Column(db.String(128),index = True)
     headpic = db.Column(db.String(128),index = True)
     logo = db.Column(db.String(128),index = True)
+    logoText = db.Column(db.String(128),index = True)
 
     def is_authenticated(self):
         return True
@@ -83,7 +84,6 @@ class User(db.Model):
         path = app.config["QRCODES_FOLDER"]+"/"+str(user.id)+time+".png"
 
         if  qrlogo and os.path.exists(qrlogo) :
-            print qrlogo
             img = img.convert("RGBA")
             icon = Image.open(qrlogo)
             # icon = img.convert('RGBA')
@@ -106,7 +106,6 @@ class User(db.Model):
             img.save(path)
 
         self.qrcode = path
-        print "save %s"%(path)
         db.session.commit()
 
         return True

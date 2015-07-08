@@ -112,9 +112,9 @@
       <div class="row">
         <div class="container-text ">
           <center><p>Logo字幕</p></center>
-          <input type="text" class="form-control" id="input" placeholder="填写Logo字幕">
+          <input type="text" name="logo-text" class="form-control" id="input" placeholder="填写Logo字幕">
           <span id="helpBlock" class="help-block" style="  margin-left: 10px; margin-bottom: 25px;">注：背面所有内容可不填，不填即不显示。</span>
-          <center><button id="btn-clear">清除已填背面信息</button></center>
+          <center><a id="btn-clear">清除已填背面信息</a></center>
         </div>
         <div class="content-bottom">
         <center>
@@ -129,12 +129,24 @@
     <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
     <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
     <script src={{url_for('static',filename="js/jasny-bootstrap.min.js")}}></script>
+    <script type= "text/javascript">
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
     <script type="text/javascript">
     $("#btn-clear").bind("click", function(){
       $("#input").val("");
       $("img").attr('src',"{{url_for('static',filename='images/placeholder.png')}}");
     });
+
     $(function(){
+      $.get($SCRIPT_ROOT+"/_getCardDetail",
+      {
+        user_id : {{user_id}}
+      },
+      function(data){
+        $("#input").val(data.logoText);
+      });
+
       $("#logopic").find("img").attr('src',"{{url_for('static',filename='images/placeholder.png')}}")
     });
     </script>

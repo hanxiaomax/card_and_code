@@ -243,7 +243,9 @@ def cardback(user_id):
             os.remove(user.logo)
         logo = request.files["backlogo"]
         time = str(datetime.today()).replace(" ","_").replace(":","_").replace(".","_")#防止从缓存加载
-
+        logoText = request.form['logo-text']
+        print request.form.keys()
+        user.logoText = logoText
         if logo and allowed_file(logo.filename):
             filename = secure_filename(logo.filename)
             logo_path = os.path.join(upload_path, "user_id_"+str(user_id)+"_"+time+filename.split(".")[0]+".png")
