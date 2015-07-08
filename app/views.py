@@ -1,5 +1,6 @@
 #coding:utf-8
-from flask import render_template,request,redirect,url_for,jsonify,make_response
+from flask import render_template,request,redirect,url_for,jsonify,make_response,g
+from flask.ext.login import login_user, logout_user, current_user, login_required
 from models import Contact,Friend_Ship,User
 from app import app,db
 import os
@@ -13,6 +14,34 @@ import hashlib
 from xml.etree import ElementTree
 
 upload_path = app.config["UPLOAD_FOLDER"]
+
+# @lm.user_loader
+# def load_user(id):
+#     return User.query.get(int(id))
+
+# @app.route('/login/', methods=['GET', 'POST'])
+# def login():
+#     # #已经登录
+#     # if g.user is not None and g.user.is_authenticated():
+#     #     return redirect(url_for('electronic_edit',user_id=g.user.id))
+#     if request.method == "GET":
+#     #尚未登录
+#         xml_recv = ElementTree.fromstring(request.data)
+#         UserName = xml_recv.find("FromUserName").text#openID
+#         user = User.isExist("1")
+#         # if user:
+#         #     g.user = UserName
+#         # else:
+#         #     u=User(username=UserName)
+#         #     g.user = UserName
+#         #     db.session.add(u)
+#         #     db.session.commit()
+#         #     user = User.isExist(UserName)
+#         return redirect(url_for('electronic_edit',user_id=user.id))
+#     else:
+#         return "登录失败"
+
+
 
 @app.route('/',methods=['GET', 'POST'])
 @app.route('/index/', methods=['GET', 'POST'])
@@ -64,9 +93,12 @@ def wechat_auth():
         if(hashlib.sha1(s).hexdigest() == signature):
             return echostr
 
+    if request.method == "POST":
 
-
-
+        # xml_recv = ElementTree.fromstring(request.data)
+        # UserName = xml_recv.find("FromUserName").text#openID
+        user = User.isExist("1")
+        return redirect(url_for('electronic_edit',user_id=user.id))
 
 
 
@@ -98,7 +130,8 @@ def electronic_edit(user_id):
             user.logo = logo_path
             logo.save(logo_path)
             db.session.commit()
-        user.makeQrcode(user,user.headpic)#生成二维码
+        # user.makeQrcode(user,user.headpic)#生成二维码
+        user.makeQrcode(user)
         return redirect(url_for("electronic_finish",user_id=user_id))
 
     return render_template("electronic_edit.html",user_id=user_id)

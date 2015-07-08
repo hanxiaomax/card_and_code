@@ -19,8 +19,26 @@ class User(db.Model):
     headpic = db.Column(db.String(128),index = True)
     logo = db.Column(db.String(128),index = True)
 
-    def is_authenticated():
+    def is_authenticated(self):
         return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
+    def __repr__(self):
+        return '<User %r>' % (self.name)
+
+    @classmethod
+    def isExist(cls,username):
+        user = cls.query.filter(db.or_(User.username==username)).first()
+        return user if user else False
+
 
     @classmethod
     def getUser(cls,id):
@@ -82,12 +100,8 @@ class User(db.Model):
             icon = icon.convert("RGBA")
             w = int((img_w - icon_w) / 2)
             h = int((img_h - icon_h) / 2)
-
             img.paste(icon, (w, h), icon)
-
-
             img.save(path)
-
         else:
             img.save(path)
 
