@@ -118,7 +118,9 @@
         <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
         <script src={{url_for('static',filename="js/jquery.validate.min.js")}}></script>
         <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
-
+        <script type= "text/javascript">
+          $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>
 
         <script type="text/javascript">
             $().ready(function() {
@@ -148,7 +150,17 @@
             //TODO：表单信息应该发送到服务器，存入数据库。页面跳转后在新的页面中，加载从服务器获取的全部地址信息。
             $("#submit-btn").bind("click", function() {
                 if ($("#addressForm").valid()){
-                    ////code here
+
+                    $.get($SCRIPT_ROOT+"/_saveShipAddress",
+                      {
+                        user_id : {{user_id}},
+                        name:$("input[name='name']").val(),
+                        phone:$("input[name='phone']").val(),
+                        address:$("input[name='address']").val()
+                      },
+                      function(){
+
+                    });
                 }
                 else{
                     return false

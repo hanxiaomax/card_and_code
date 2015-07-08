@@ -1,7 +1,7 @@
 #coding:utf-8
 from flask import render_template,request,redirect,url_for,jsonify,make_response,g
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from models import Contact,Friend_Ship,User
+from models import Contact,Friend_Ship,User,Ship_Address
 from app import app,db
 import os
 import json
@@ -126,7 +126,7 @@ def electronic_edit(user_id):
             db.session.commit()
         if logo and allowed_file(logo.filename):
             filename = secure_filename(logo.filename)
-            logo_path = os.path.join(upload_path, "user_id_"+str(user_id)+"_"+time+filename.split(".")[0]+"png")
+            logo_path = os.path.join(upload_path, "user_id_"+str(user_id)+"_"+time+filename.split(".")[0]+".png")
             user.logo = logo_path
             logo.save(logo_path)
             db.session.commit()
@@ -204,18 +204,52 @@ def afterEditcard(user_id):
 def makeOrder(user_id):
     return render_template("makeOrder.html",user_id=user_id)
 
-@app.route('/user<int:user_id>_shipAddress')
+@app.route('/user<int:user_id>_shipAddress/')
 def shipAddress(user_id):
     return render_template("shipAddress.html",user_id=user_id)
 
-@app.route('/user<int:user_id>_enterAddress')
+@app.route('/user<int:user_id>_enterAddress/')
 def enterAddress(user_id):
     return render_template("enterAddress.html",user_id=user_id)
 
 
-@app.route('/user<int:user_id>_shipway')
+@app.route('/user<int:user_id>_shipway/')
 def shipway(user_id):
     return render_template("shipway.html",user_id=user_id)
 
+@app.route('/_saveShipAddress/')
+def saveShipAddress():
+    query = request.args
+    user_id  = query.get('user_id')
+    name = query.get('name')
+    phone = query.get('phone')
+    address = query.get('address')
+    s=Ship_Address(name=name,phone=phone,address=address,user_id=user_id)
+    db.session.add(s)
+    db.session.commit()
 
+    return redirect(url_for('makeOrder',user_id=user_id))
 
+@app.route('/_getShipAddress/')
+def getShipAddress():
+    user_id  = request.args.get('user_id')
+    return Tools.getAddressList(user_id)
+
+@app.route('/user<int:user_id>_cardback/',methods=["GET","POST"])
+def cardback(user_id):
+    if request.method == "POST":
+        user = User.getUser(user_id)
+        if user.logo and os.path.exists(user.logo):
+            os.remove(user.logo)
+        logo = request.files["backlogo"]
+        time = str(datetime.today()).replace(" ","_").replace(":","_").replace(".","_")#防止从缓存加载
+
+        if logo and allowed_file(logo.filename):
+            filename = secure_filename(logo.filename)
+            logo_path = os.path.join(upload_path, "user_id_"+str(user_id)+"_"+time+filename.split(".")[0]+".png")
+            user.logo = logo_path
+            logo.save(logo_path)
+            db.session.commit()
+        return redirect(url_for("editcard",user_id=user_id))
+
+    return render_template("cardback.html",user_id=user_id)

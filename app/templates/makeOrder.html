@@ -191,10 +191,10 @@
             <div class="row">
                 <center><div class="describe-text">名片预览</div></center>
                 <div class="container-preview col-xs-12">
-                    <div class="card-preview">
+                    <div class="card-preview" onclick="onfrontclick()">
 
                     </div>
-                    <div class="card-preview">
+                    <div class="card-preview" onclick="onbackclick()">
 
                     </div>
                 </div>
@@ -304,6 +304,14 @@
             // alert(name+phone+address)
             $("#addressArea").html("<div class='row col-xs-12'><div id='text' class='width-30 pull-left' >收件人:</div><div id='name1' class='width-30 pull-left'>"+name+"</div><div id='phone1' class='width-40 pull-left'>"+phone+"</div><div id='address1'>"+address+"</div></div>")
 
+        }
+        function onfrontclick()
+        {
+            location.href = "{{url_for('editcard',user_id=user_id)}}"
+        }
+        function onbackclick()
+        {
+            location.href = "{{url_for('editcard',user_id=user_id)}}"
         }
 </script>
 </body>

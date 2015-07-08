@@ -7,13 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- ↓ 标题 -->
     <title>编辑背面</title>
-    <!-- ↓ 默认引用bootstrap、icomoon字体以及default样式 -->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/icomoon.css">
-    <link rel="stylesheet" type="text/css" href="css/default.css">
-    <!-- ↓ 自定义css，名称最好和html相同 -->
-    <link rel="stylesheet" type="text/css" href="css/模板.css">
-    <link rel="stylesheet" type="text/css" href="css/jasny-bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+  <!-- <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/模板.css")}}> -->
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/jasny-bootstrap.min.css")}}>
     <style>
     p{
     margin-top: 20px;
@@ -76,22 +74,38 @@
       padding: 0px;
     border: 1px solid #000000;
     }
+    .btn-submit {
+    height: 48px;
+    border:none;
+    border-radius: 0px;
+    background-color: #107AFD;
+    color: #FFF;
+    font-size: 18px
+  }
+  .btn-submit:active, .btn-submit:focus, .btn-submit:hover {
+    color: #FFF;
+    font-size: 18px
+  }
     </style>
   </head>
   <body>
     <div class="container">
+    <form id="form" enctype="multipart/form-data" method="post">
       <div class="row">
         <div class="container-logo col-xs-12">
           <center><p>公司Logo</p></center>
           <center>
-          <div class="fileinput fileinput-new" data-provides="fileinput">
+
+            <div id="logopic" class="fileinput fileinput-new" data-provides="fileinput">
             <div  class="fileinput-preview btn-file" type="file" data-trigger="fileinput" style="width: 127px; height: 127px;">
-              <img id="image" src="images/placeholder.png" />
+              <img id="image" src={{url_for('static',filename="images/placeholder.png")}} />
             </div>
             <div>
-              <span style="display:none; " class="btn btn-default btn-file"><span class="fileinput-new"></span><span class="fileinput-exists"></span><input type="file" ></span>
+              <span style="display:none; " class="btn btn-default btn-file"><span class="fileinput-new"></span><span class="fileinput-exists"></span><input type="file" name="backlogo"></span>
             </div>
           </div>
+
+
           </center>
         </div>
       </div>
@@ -102,21 +116,26 @@
           <span id="helpBlock" class="help-block" style="  margin-left: 10px; margin-bottom: 25px;">注：背面所有内容可不填，不填即不显示。</span>
           <center><button id="btn-clear">清除已填背面信息</button></center>
         </div>
-      </div>
-      <div class="content-bottom">
-        <center class="width-100 block-btn-primary">
-        <a href="">完成编辑</a>
+        <div class="content-bottom">
+        <center>
+        <input value="完成编辑" type="submit" id="submit" class="btn btn-submit width-100"/>
+
         </center>
       </div>
+      </div>
+</form>
     </div>
     <!-- ↓jQuery和bootstrap的js效果，请保留，顺序不动 -->
-    <script src="js/jquery-1.10.2.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jasny-bootstrap.min.js"></script>
+    <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+    <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
+    <script src={{url_for('static',filename="js/jasny-bootstrap.min.js")}}></script>
     <script type="text/javascript">
     $("#btn-clear").bind("click", function(){
       $("#input").val("");
-      $("img").attr('src',"images/placeholder.png");
+      $("img").attr('src',"{{url_for('static',filename='images/placeholder.png')}}");
+    });
+    $(function(){
+      $("#logopic").find("img").attr('src',"{{url_for('static',filename='images/placeholder.png')}}")
     });
     </script>
   </body>
