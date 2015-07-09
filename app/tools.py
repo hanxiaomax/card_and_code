@@ -40,13 +40,12 @@ class Tools(object):
     @classmethod
     def getAddressList(cls,user_id):
         user = User.getUser(user_id)
-        print user.shipAddress.all()
         data={
         "type":"data",
         "datalist":[]
         }
         for item in user.shipAddress.all():
-            temp={"name":item.name,"phone":item.phone,"address":item.address}
+            temp={"name":item.name,"phone":item.phone,"address":item.address,"index":item.id}
             data["datalist"].append(temp)
         return jsonify(data)
 

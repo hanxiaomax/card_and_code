@@ -154,6 +154,7 @@
                     $.get($SCRIPT_ROOT+"/_saveShipAddress",
                       {
                         user_id : {{user_id}},
+                        index:sessionStorage.index,
                         name:$("input[name='name']").val(),
                         phone:$("input[name='phone']").val(),
                         address:$("input[name='address']").val()

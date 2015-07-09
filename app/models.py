@@ -51,15 +51,12 @@ class User(db.Model):
         user.position = None
         user.name = None
         if user.logo and os.path.exists(user.logo):
-            print "remove %s"%(user.logo)
             os.remove(user.logo)
             user.logo = None
         if user.headpic and os.path.exists(user.headpic):
-            print "remove %s"%(user.headpic)
             os.remove(user.headpic)
             user.headpic = None
         if user.qrcode and os.path.exists(user.qrcode):
-            print "remove %s"%(user.qrcode)
             os.remove(user.qrcode)
             user.qrcode = None
         contacts =Contact.query.filter(Contact.user_id==user.id).all()
@@ -130,3 +127,7 @@ class Ship_Address(db.Model):
     address = db.Column(db.String(32))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    @classmethod
+    def getAdd(cls,index):
+        print "22"
+        return Ship_Address.query.filter(db.or_(cls.id==int(index))).first()

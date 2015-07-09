@@ -226,8 +226,17 @@ def saveShipAddress():
     name = query.get('name')
     phone = query.get('phone')
     address = query.get('address')
-    s=Ship_Address(name=name,phone=phone,address=address,user_id=user_id)
-    db.session.add(s)
+    index = query.get('index')
+    print index
+    add=Ship_Address.getAdd(index)
+    print add
+    if add:
+        add.name=name
+        add.phone=phone
+        add.address=address
+    else:
+        s=Ship_Address(name=name,phone=phone,address=address,user_id=user_id)
+        db.session.add(s)
     db.session.commit()
 
     return redirect(url_for('makeOrder',user_id=user_id))
