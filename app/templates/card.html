@@ -89,13 +89,13 @@ ul,li{ list-style:none; margin:0;}
            <!--  <div id="cont0"> -->
             <div id="cont0" >
             <div class="templates">
-            <a href={{url_for('editcard',user_id=user_id)}} name="cardbtn" value="1">
+            <a  name="cardbtn" value="1">
               <img style="width:150px;height:90px;" src={{url_for('static',filename="images/templates/纸质名片模板1-0.png")}} >
             </a>
             </div>
 
             <div class="templates">
-            <a href={{url_for('editcard',user_id=user_id)}} name="cardbtn" value="2">
+            <a  name="cardbtn" value="2">
               <img style="width:150px;height:90px;" src={{url_for('static',filename="images/templates/纸质名片模板10-0.png")}} >
             </a>
             </div>
@@ -185,6 +185,9 @@ ul,li{ list-style:none; margin:0;}
   <!-- ↓jQuery和bootstrap的js效果，请保留，顺序不动 -->
 <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
 <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
+<script type= "text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
 <script type="text/javascript">
   function tab(Nav,Num){
       if(Nav.className=="active")return;
@@ -203,8 +206,7 @@ ul,li{ list-style:none; margin:0;}
     }
   //判断哪个卡片被点击，序号存入sessionStorage
     $("a[name='cardbtn']").bind("click",function(){
-      // alert($(this).attr('value'))
-	  var ss=$(this).attr('value');
+    location.href="{{url_for('editcard',user_id=user_id)}}"
 		sessionStorage.cardtype=$(this).attr('value');
     });
 </script>

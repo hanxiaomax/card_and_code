@@ -1,7 +1,8 @@
+#coding:utf-8
 from flask import render_template,request,redirect,url_for,jsonify
 from models import User
 from app import app,db
-
+import os
 class Tools(object):
     @classmethod
     def getcarddetail(cls,user_id):
@@ -29,7 +30,10 @@ class Tools(object):
         "info":info,
         "intro":intro,
         "custom":custom,
-        "logoText":user.logoText
+        "logoText":user.logoText if user.logoText else u"Logo字幕（选填）",
+        "headpic":os.path.basename(user.headpic) if user.headpic  else "default_headpic.png",
+        "logo":os.path.basename(user.logo) if user.logo  else "default_logo.png",
+        "qrcode":os.path.basename(user.qrcode) if user.qrcode  else None
         }
         return jsonify(dic)
 
