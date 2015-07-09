@@ -250,7 +250,8 @@ def cardback(user_id):
             logo_path = os.path.join(upload_path, "user_id_"+str(user_id)+"_"+time+filename.split(".")[0]+".png")
             user.logo = logo_path
             logo.save(logo_path)
-            db.session.commit()
+
+        db.session.commit()
         return redirect(url_for("editcard",user_id=user_id))
 
     return render_template("cardback.html",user_id=user_id)
