@@ -113,8 +113,10 @@ def electronic_edit(user_id):
         user = User.getUser(user_id)
         if user.logo and os.path.exists(user.logo):
             os.remove(user.logo)
+            user.logo = None
         if user.headpic and os.path.exists(user.headpic):
             os.remove(user.headpic)
+            user.headpic  = None
         file = request.files['file']
         logo = request.files["logo"]
         time = str(datetime.today()).replace(" ","_").replace(":","_").replace(".","_")#防止从缓存加载
@@ -241,6 +243,7 @@ def cardback(user_id):
         user = User.getUser(user_id)
         if user.logo and os.path.exists(user.logo):
             os.remove(user.logo)
+            user.logo  = None
         logo = request.files["backlogo"]
         time = str(datetime.today()).replace(" ","_").replace(":","_").replace(".","_")#防止从缓存加载
         logoText = request.form['logo-text']

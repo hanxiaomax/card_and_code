@@ -393,10 +393,10 @@
           var back = $(this).find(".dingwei")
           var logotext = $(this).find(".dingwei").find(".logotext p")
           logotext.html(data.logoText)
-          back.find("img[name='logo']").attr("src","{{url_for('static',filename='uploads/')}}"+data.logo)
-
-        })
-
+          if (data.logo) {
+            back.find("img[name='logo']").attr("src","{{url_for('static',filename='uploads/')}}"+data.logo)
+          };
+        });
       });
     });
     //构建一条信息
