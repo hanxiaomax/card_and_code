@@ -76,20 +76,8 @@
             <div class="row ">
                 <div class="btn-group-vertical width-100" id= "button-group">
                     <!-- 按钮 -->
-                    <label id="option1" value="1" name="options" class=" btn btn-block container-address"  style="text-align: left;">
-                        <div class="width-75 pull-left info-box " >
-                            <div class="row col-xs-12">
-                                <div id="text" class="width-30 pull-left text">收件人:</div>
-                                <div id="name1" class="width-30 pull-left name">杨宝玲</div>
-                                <div id="phone1" class="width-40 pull-left phone">15250413229</div>
-                                <div id="address1" class="address">江苏省南京市江宁区东南大学九龙湖校区机械楼</div>
-                            </div>
-                        </div>
-                        <div class="width-20 pull-right block-btn " onclick="">
-                            <center><a class="btn block-btn " href="enterAddress.html"><span class="icon-edit icon-block"></span></a></center>
-                        </div>
-                    </label>
-                    <label id="option2" value="2" name="options" class=" btn btn-block container-address"  style="text-align: left;">
+
+                    <!-- <label id="option2" value="2" name="options" class=" btn btn-block container-address"  style="text-align: left;">
                         <div class="width-75 pull-left info-box " >
                             <div class="row col-xs-12">
                                 <div id="text" class="width-30 pull-left text">收件人:</div>
@@ -101,7 +89,7 @@
                         <div class="width-20 pull-right block-btn" onclick="">
                             <center><a class="btn block-btn " href="enterAddress.html"><span class="icon-edit icon-block"></span></a></center>
                         </div>
-                    </label>
+                    </label> -->
                 </div>
                 <div class="content-bottom col-xs-12" style="margin-bottom: 10px;">
                 <center class="width-100 block-btn-primary" style="border-radius: 5px;">
@@ -131,7 +119,7 @@
             var count=0
             $.each(data.datalist,function(){
                 count++;
-                makeBtn(this.name,this.phone,this.address,count)
+                makeBtn(this.name,this.phone,this.address,count,this.index)
             })
         });
     });
@@ -142,16 +130,13 @@
         sessionStorage.name = $("#name"+addressNum).html()
         sessionStorage.phone = $("#phone"+addressNum).html()
         sessionStorage.address = $("#address"+addressNum).html()
+        sessionStorage.index = $(this).attr("index")
         sessionStorage.from = '0'
         location.href = "{{url_for('makeOrder',user_id=user_id)}}"
     });
     //生成按钮
-    function makeBtn (name,phone,address,num) {
-        var name = name
-        var phone = phone
-        var address= address
-        var num = num
-        $("#button-group").append("<label id='option"+num+"' value='"+num+"' name='options' class=' btn btn-block container-address'  style='text-align: left;'><div class='width-75 pull-left info-box ' ><div class='row col-xs-12'><div id='text' class='width-30 pull-left text'>收件人:</div><div id='name"+num+"' class='width-30 pull-left name'>"+name+"</div><div id='phone"+num+"' class='width-40 pull-left phone'>"+phone+"</div><div id='address"+num+"' class='address'>"+address+"</div></div></div><div  class='width-20 pull-right block-btn' onclick='' ><center><a href={{url_for('enterAddress',user_id=user_id)}} class='btn block-btn ' ><span class='icon-edit icon-block'></span></a></center></div></label>")
+    function makeBtn (name,phone,address,num,index) {
+        $("#button-group").append("<label index="+index+" id='option"+num+"' value='"+num+"' name='options' class=' btn btn-block container-address'  style='text-align: left;'><div class='width-75 pull-left info-box ' ><div class='row col-xs-12'><div id='text' class='width-30 pull-left text'>收件人:</div><div id='name"+num+"' class='width-30 pull-left name'>"+name+"</div><div id='phone"+num+"' class='width-40 pull-left phone'>"+phone+"</div><div id='address"+num+"' class='address'>"+address+"</div></div></div><div  class='width-20 pull-right block-btn' onclick='' ><center><a href={{url_for('enterAddress',user_id=user_id)}} class='btn block-btn ' ><span class='icon-edit icon-block'></span></a></center></div></label>")
     }
 
 
