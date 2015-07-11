@@ -7,7 +7,7 @@ from datetime import datetime
 qrcode_folder = app.config["QRCODES_FOLDER"]
 class User(db.Model):
     id = db.Column(db.Integer,primary_key = True)
-    username = db.Column(db.String(16),index = True,unique = True)
+    username = db.Column(db.String(32),index = True,unique = True)
     password = db.Column(db.String(32),index = True)
     friendship = db.relationship('Friend_Ship',backref='user',lazy = 'dynamic')
     contact = db.relationship('Contact',backref='user',lazy = 'dynamic')
@@ -35,9 +35,39 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % (self.name)
 
+
+    @classmethod
+    def addUser(cls,username):
+        u=User(username=username)
+        db.session.add(u)
+        db.session.flush()
+        user_id=u.id
+        db.session.commit()
+        return user_id
+
+    @classmethod
+    def deleteUser(cls,username):
+        print "1"
+        u=cls.isExist(username)
+        print "2"
+        if u :
+            for i in u.contact.all():
+                db.session.delete(i)
+            for i in u.friendship.all():
+                db.session.delete(i)
+            for i in u.shipAddress.all():
+                db.session.delete(i)
+            db.session.delete(u)
+            db.session.commit()
+            return True
+        else:
+            return False
+
+
     @classmethod
     def isExist(cls,username):
         user = cls.query.filter(db.or_(User.username==username)).first()
+        print user
         return user if user else False
 
 

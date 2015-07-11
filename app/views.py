@@ -1,5 +1,5 @@
 #coding:utf-8
-from flask import render_template,request,redirect,url_for,jsonify,make_response,g
+from flask import render_template,request,redirect,url_for,jsonify,make_response,g,session
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from models import Contact,Friend_Ship,User,Ship_Address
 from app import app,db
@@ -9,107 +9,98 @@ import sqlalchemy.exc
 from tools import Tools
 from werkzeug import secure_filename
 from datetime import datetime
-import time
 import hashlib
 from xml.etree import ElementTree
+import requests
+import time
+
+
 
 upload_path = app.config["UPLOAD_FOLDER"]
-
-# @lm.user_loader
-# def load_user(id):
-#     return User.query.get(int(id))
-
-# @app.route('/login/', methods=['GET', 'POST'])
-# def login():
-#     # #已经登录
-#     # if g.user is not None and g.user.is_authenticated():
-#     #     return redirect(url_for('electronic_edit',user_id=g.user.id))
-#     if request.method == "GET":
-#     #尚未登录
-#         xml_recv = ElementTree.fromstring(request.data)
-#         UserName = xml_recv.find("FromUserName").text#openID
-#         user = User.isExist("1")
-#         # if user:
-#         #     g.user = UserName
-#         # else:
-#         #     u=User(username=UserName)
-#         #     g.user = UserName
-#         #     db.session.add(u)
-#         #     db.session.commit()
-#         #     user = User.isExist(UserName)
-#         return redirect(url_for('electronic_edit',user_id=user.id))
-#     else:
-#         return "登录失败"
-
-
-
-@app.route('/',methods=['GET', 'POST'])
-@app.route('/index/', methods=['GET', 'POST'])
-def index():
-    if request.method == "POST":
-        return redirect(url_for("message_handler"))
-    return render_template("token.html",user_id="1")
-    # return "施工中"
-
-@app.route('/message/', methods=['GET', 'POST'])
-def message_handler():
-    if request.method == "POST":
-        xml_recv = ElementTree.fromstring(request.data)
-        ToUserName = xml_recv.find("ToUserName").text
-        FromUserName = xml_recv.find("FromUserName").text
-        CreateTime = xml_recv.find("CreateTime").text
-        Event = xml_recv.find("Event").text
-        MsgType = xml_recv.find("MsgType").text
-        reply = "<xml><ToUserName><![CDATA[%s]]></ToUserName>\
-                        <FromUserName><![CDATA[%s]]></FromUserName>\
-                        <CreateTime>%s</CreateTime>\
-                        <MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]>\
-                        </Content><FuncFlag>0</FuncFlag></xml>"
-
-        response = make_response( reply %(ToUserName,FromUserName,CreateTime,"hhhhhhh"))
-        response.content_type = 'application/xml'
-        return response
-
-
-@app.route('/login/', methods=['GET', 'POST'])
-def wechat_auth():
-    """
-    加密/校验流程如下：
-    1. 将token、timestamp、nonce三个参数进行字典序排序
-    2. 将三个参数字符串拼接成一个字符串进行sha1加密
-    3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于微信
-    4. 原样返回echostr
-    """
-    if request.method == "GET":
-        token = "youwillneverknowwhoiamlingfeng"
-        query = request.args
-        signature = query.get('signature')#微信加密签名，结合了后三者
-        timestamp = query.get('timestamp')
-        nonce = query.get('nonce')#随机数
-        echostr = query.get('echostr')#随机字符串
-        s = [timestamp,nonce,token]
-        s.sort()
-        s = "".join(s)
-        if(hashlib.sha1(s).hexdigest() == signature):
-            return echostr
-
-    if request.method == "POST":
-
-        # xml_recv = ElementTree.fromstring(request.data)
-        # UserName = xml_recv.find("FromUserName").text#openID
-        user = User.isExist("1")
-        return redirect(url_for('electronic_edit',user_id=user.id))
-
-
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config["ALLOWED_EXTENSIONS"]
 
+#PC端演示页面
+@app.route("/demo/")
+def demo():
+    username="testuser"
+    User.deleteUser(username)
+    user_id=User.addUser(username)
+
+    return redirect(url_for('electronic_edit',user_id=user_id))
+
+
+#微信公共平台服务器地址
+@app.route('/',methods=['GET', 'POST'])
+@app.route('/index/', methods=['GET', 'POST'])
+def index():
+    if request.method =="GET":
+        return redirect(url_for('demo'))
+
+
+@app.route('/server/',methods=['GET','POST'])
+def server():
+    if request.method == "GET":
+        token = 'youwillneverknowwhoiamlingfeng'
+        query = request.args
+        signature = query.get('signature')
+        timestamp = query.get('timestamp')
+        nonce = query.get('nonce')
+        echostr = query.get('echostr')
+        s = [timestamp, nonce, token]
+        s.sort()
+        s = ''.join(s)
+        if ( hashlib.sha1(s).hexdigest() == signature ):
+          return make_response(echostr)
+
+    xml_recv = ElementTree.fromstring(request.data)
+    ToUserName = xml_recv.find("ToUserName").text
+    FromUserName = xml_recv.find("FromUserName").text
+    Content = xml_recv.find("Content").text
+    reply= "<xml>\
+                <ToUserName><![CDATA[%s]]></ToUserName>\
+                <FromUserName><![CDATA[%s]]></FromUserName>\
+                <CreateTime>12345678</CreateTime>\
+                <MsgType><![CDATA[text]]></MsgType>\
+                <Content><![CDATA[%s]]></Content>\
+            </xml>"
+
+    response=make_response(reply%("ToUserName",FromUserName,Content))
+    response.content_type = 'application/xml'
+    return response
+
+#授权后重定向到本页面，参数为code和state
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+    if request.method == "GET":
+        query = request.args
+        if query.has_key('code'):
+            code = query.get("code")#获取用户授权code
+            appid="wx7e4cf550df5e7653"
+            AppSecret="1ddbff16c17736c5b419f5205aebf869"
+            access_token_url="https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
+            r = requests.get(access_token_url%(appid,AppSecret,code))#请求获取access_token
+            j=json.loads(r.text)#从相应对象中获取json字符串并转换为json
+            openid=j['openid']
+            username=openid
+            u=User.isExist(str(openid))
+            if not u :
+                user_id=User.addUser(openid)
+                return redirect(url_for('electronic_edit',user_id=user_id))
+            else:
+                return redirect(url_for('electronic_edit',user_id=u.id))
+        else:
+            return "请从微信进入或访问http://microbots.club/demo/"
+
+    if request.method == "POST":
+        return render_template("login.html",id="22")
+
+
 @app.route('/user<int:user_id>_edit/',methods=['GET', 'POST'])
 def electronic_edit(user_id):
     if request.method == 'POST':
-        # print "electronic_edit POST"
+
         user = User.getUser(user_id)
         if user.logo and os.path.exists(user.logo):
             os.remove(user.logo)
@@ -166,8 +157,6 @@ def saveContact():
     return redirect(url_for("electronic_finish",user_id=user_id))
 
 
-
-
 @app.route('/user<int:user_id>_finish/')
 def electronic_finish(user_id):
     user = User.getUser(user_id)
@@ -198,6 +187,20 @@ def _getCardDetail():
 def editcard(user_id):
     return render_template("edit-fang.html",user_id=user_id)
 
+
+@app.route('/user<int:user_id>_editluxury/')
+def editluxury(user_id):
+    return render_template("edit-luxury.html",user_id=user_id)
+
+@app.route('/user<int:user_id>_editbusiness/')
+def editbusiness(user_id):
+    return render_template("edit-business.html",user_id=user_id)
+
+@app.route('/user<int:user_id>_editfashion/')
+def editfashion(user_id):
+    return render_template("edit-fashion.html",user_id=user_id)
+
+
 @app.route('/user<int:user_id>_aftercard/')
 def afterEditcard(user_id):
     return render_template("after_edit.html",user_id=user_id)
@@ -219,6 +222,9 @@ def enterAddress(user_id):
 def shipway(user_id):
     return render_template("shipway.html",user_id=user_id)
 
+
+
+
 @app.route('/_saveShipAddress/')
 def saveShipAddress():
     query = request.args
@@ -227,9 +233,7 @@ def saveShipAddress():
     phone = query.get('phone')
     address = query.get('address')
     index = query.get('index')
-    print index
     add=Ship_Address.getAdd(index)
-    print add
     if add:
         add.name=name
         add.phone=phone
