@@ -89,13 +89,13 @@ ul,li{ list-style:none; margin:0;}
            <!--  <div id="cont0"> -->
             <div id="cont0" >
             <div class="templates">
-            <a  name="cardbtn" value="1">
+            <a  name="cardbtn"  card-type="normal" value="1">
               <img style="width:150px;height:90px;" src={{url_for('static',filename="images/templates/纸质名片模板1-0.png")}} >
             </a>
             </div>
 
             <div class="templates">
-            <a  name="cardbtn" value="2">
+            <a  name="cardbtn"  card-type="normal" value="2">
               <img style="width:150px;height:90px;" src={{url_for('static',filename="images/templates/纸质名片模板10-0.png")}} >
             </a>
             </div>
@@ -154,21 +154,21 @@ ul,li{ list-style:none; margin:0;}
         <!--   </div> -->
           <div id="cont1" style="display:none;">
             <div class="templates">
-            <a href="edit-fashion.html" name="cardbtn" value="1">
+            <a  name="cardbtn" card-type="fashion" value="1">
             <img style="width:150px;height:90px;" src={{url_for('static',filename="images/templates/纸质名片模板-时尚-1.png")}} >
             </a>
             </div>
           </div>
           <div id="cont2" style="display:none;">
             <div class="templates">
-            <a href="edit-business.html" name="cardbtn" value="1">
+            <a  name="cardbtn" card-type="business" value="1">
             <img style="width:150px;height:90px;" src={{url_for('static',filename="images/templates/纸质名片模板-商务-1.png")}} >
             </a>
             </div>
           </div>
           <div id="cont3" style="display:none;">
             <div class="templates">
-            <a href="edit-luxury.html" name="cardbtn" value="1">
+            <a  name="cardbtn" card-type="luxury" value="1">
             <img style="width:150px;height:90px;" src={{url_for('static',filename="images/templates/纸质名片模板-奢华-0.png")}} >
             </a>
             </div>
@@ -206,8 +206,18 @@ ul,li{ list-style:none; margin:0;}
     }
   //判断哪个卡片被点击，序号存入sessionStorage
     $("a[name='cardbtn']").bind("click",function(){
-    location.href="{{url_for('editcard',user_id=user_id)}}"
-		sessionStorage.cardtype=$(this).attr('value');
+      sessionStorage.cardtype=$(this).attr('value');
+      var type = $(this).attr("card-type")
+      switch(type)
+      {
+        case "normal":location.href="{{url_for('editcard',user_id=user_id)}}";break;
+        case "business":location.href="{{url_for('editbusiness',user_id=user_id)}}";break;
+        case "fashion":location.href="{{url_for('editfashion',user_id=user_id)}}";break;
+        case "luxury":location.href="{{url_for('editluxury',user_id=user_id)}}";break;
+
+      }
+
+
     });
 </script>
 

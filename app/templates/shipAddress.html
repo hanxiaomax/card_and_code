@@ -101,7 +101,8 @@
         </div>
     </div>
     <!-- ↓jQuery和bootstrap的js效果，请保留，顺序不动 -->
-  <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+    <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+
   <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
   <script type= "text/javascript">
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
