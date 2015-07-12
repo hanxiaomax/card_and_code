@@ -38,7 +38,7 @@ class User(db.Model):
 
     @classmethod
     def addUser(cls,username):
-        u=User(username=username)
+        u=User(username=username,name="",corp="",position="")
         db.session.add(u)
         db.session.flush()
         user_id=u.id
@@ -47,9 +47,7 @@ class User(db.Model):
 
     @classmethod
     def deleteUser(cls,username):
-        print "1"
         u=cls.isExist(username)
-        print "2"
         if u :
             for i in u.contact.all():
                 db.session.delete(i)
@@ -67,7 +65,6 @@ class User(db.Model):
     @classmethod
     def isExist(cls,username):
         user = cls.query.filter(db.or_(User.username==username)).first()
-        print user
         return user if user else False
 
 
@@ -77,9 +74,9 @@ class User(db.Model):
         return user
     @classmethod
     def clear(cls,user):
-        user.corp = None
-        user.position = None
-        user.name = None
+        user.corp = ""
+        user.position = ""
+        user.name = ""
         if user.logo and os.path.exists(user.logo):
             os.remove(user.logo)
             user.logo = None
@@ -104,7 +101,7 @@ class User(db.Model):
             box_size=10,
             border=4,
         )
-        qr.add_data("http://weibo.com/smilingly1989?wvr=3.6&lf=reg")
+        qr.add_data("hello")
         qr.make(fit=True)
         img = qr.make_image()
         time = str(datetime.today()).replace(" ","_").replace(":","_").replace(".","_")
