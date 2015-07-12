@@ -166,7 +166,7 @@
                 <a href="edit.html"><span class="icon-edit icon-button2"></span></a>
                 </center>
                 <center class="width-20 pull-left block-btn" data-toggle="modal" data-target="#mymodal">
-                <a href="#"><span class="icon-download icon-button2"></span></a>
+                <a href=""><span class="icon-download icon-button2"></span></a>
                 </center>
                 <center class="width-30 pull-left block-btn-default" onclick=
                 'OnSaveBtn()'>
@@ -188,7 +188,7 @@
                                     <button class="btn btn-default btn-right" data-dismiss="modal">取消</button>
                 </div>
                 <div class="width-50 pull-left ">
-                                    <button class="btn btn-default btn-left">确定</button>
+                                    <button class="btn btn-default btn-left" onclick="download(this)">确定</button>
                 </div>
             </div>
         </center>
@@ -204,11 +204,26 @@
 
         <!-- ↓jQuery和bootstrap的js效果，请保留，顺序不动 -->
         <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
-    <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
+        <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
+        <script type= "text/javascript">
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>
         <script type="text/javascript">
+        function find_remove (container,ele,the_attr) {
+            $.each(container.find(ele),function(){
+                if($(this).attr(the_attr)!=undefined)
+                    $(this).removeAttr(the_attr)
+            });
+        }
         $(function(){
-            $(".container-front").html(sessionStorage.cardfront)
-            $(".container-back").html(sessionStorage.cardback)
+            front=$(".container-front")//removeAttr(name)
+            front.html(sessionStorage.cardfront)
+            find_remove (front,"div","onclick")
+            back=$(".container-back")
+            back.html(sessionStorage.cardback)
+            find_remove (back,"div","onclick")
+            find_remove (back,"a","href")
+
         });
         function OnSaveBtn (argument) {
             var b = (document.body.clientWidth-211)/2
@@ -219,6 +234,9 @@
                 $("#mask").hide();
             }, 1000);
         }
+        // function download (argument) {
+        //     $.get($SCRIPT_ROOT+"_download")
+        // }
         </script>
     </body>
 </html>
