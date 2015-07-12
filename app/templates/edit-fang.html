@@ -337,7 +337,7 @@
 
 
         <div class="content-bottom1">
-         <a href={{url_for('afterEditcard',user_id=user_id)}}><center class="width-100 ">
+         <a onclick="finish(this)"><center class="width-100 ">
            完成编辑
         </center></a>
       </div>
@@ -387,8 +387,8 @@
           };
         });
         card.find("img[name='headpic']").attr("src","{{url_for('static',filename='uploads/')}}"+data.headpic)
+        card.find("img[name='headpic']").attr("class","img-circle")
         card.find("img[name='qrcode']").attr("src","{{url_for('static',filename='qrcodes/')}}"+data.qrcode)
-
         container_back.each(function(){
           var back = $(this).find(".dingwei")
           var logotext = $(this).find(".dingwei").find(".logotext p")
@@ -433,8 +433,7 @@
     default: $("#card8").css("display","block");
     }
     }
-    </script>
-    <script type="text/javascript">
+    var backindex=3
     $(document).ready(function(){
       setCard();
      $("#black-color").click(function(){
@@ -468,18 +467,26 @@
     $("#back3").click(function(){
     $("#back3").fadeOut(300);
     $("#back2").find(".logotext").css("color","#fff")
+    backindex--;
     });
 
     $("#back2").click(function(){
     $("#back2").fadeOut(300);
     $("#back1").find(".logotext").css("color","#fff")
-
+    backindex--;
     });
     $("#back1").click(function(){
     $("#back3,#back2").fadeIn(300);
     $("#back3").find(".logotext").css("color","#000")
+    backindex--;
+      if (backindex==0) {backindex=3};
     });
     });
+    function finish (onj) {
+      sessionStorage.cardfront=$(".container-front").html()
+      sessionStorage.cardback=$("#back"+backindex).html()
+      location.href="{{url_for('afterEditcard',user_id=user_id)}}"
+    }
     </script>
 
   </body>

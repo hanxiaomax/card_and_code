@@ -11,11 +11,37 @@
         <!-- ↓ 自定义css，名称最好和html相同 -->
 
         <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
-      <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+        <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+        <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/card.css")}}>
+        <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/edit.css")}}>
+        <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
 
-      <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+<style>
+          ul{
+    margin-bottom: 0px;
+  }
+  .back-logo{
+    width: 53px;
+  }
+  .logotext {
+    color: #000;
+    font-size: 8pt;
+    position: absolute;
+    top: 112px;
+    text-align: center;
+    width: 100%;
+  }
 
-        <style>
+  .banner{
+  width: 300px;
+  height: 78px;
+  position: absolute;
+  top: 54px;
+  padding-top: 5px;
+  }
+  .ribbon {
+    padding-top: 8px;
+  }
         .contact-item-basic {
         min-height: 53px;
         width: 100%;
@@ -63,12 +89,6 @@
         .icon-button2 {
         color: #393535;
         font-size: 24px;
-        }
-        .container-front{
-        background-color:#E5E5E5;
-        }
-        .container-back{
-        background-color:#E5E5E5;
         }
         .container-color{
         height: 70px;
@@ -154,16 +174,19 @@
                 padding-right: 20px;
                 text-align: center;
             }
+
         </style>
     </head>
     <body>
         <div class="container ">
                 <div class="describe-text">正面</div>
-                    <div class="card-size">
-                     </div>
+                    <div class="container-front">
+
+                    </div>
                 <div class="describe-text">反面</div>
-                <div class="card-size ">
-                </div>
+                    <div class="container-back ">
+
+                    </div>
                 <center>
     <div id="mask">
       <p id="masktext">已保存，可在“我”->“我的名片中查看”</p>
@@ -210,7 +233,10 @@
         <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
     <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
         <script type="text/javascript">
-
+        $(function(){
+            $(".container-front").html(sessionStorage.cardfront)
+            $(".container-back").html(sessionStorage.cardback)
+        });
         function OnSaveBtn (argument) {
             var b = (document.body.clientWidth-211)/2
             $("#mask").css("left",b)
