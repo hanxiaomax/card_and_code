@@ -30,22 +30,8 @@
 		<div id="tab_content">
 
 		</div>
-        <div class = "tab-bg">
-            <ul id='tabnav'>
 
-            </ul>
 
-            <div class = "name-edit">
-                <a href={{url_for('editgroup',user_id=user_id)}}><div class = "edit-position">
-                    <div><span class="icon-edit"></span></div>
-                    <div class = "edit-group">编辑分组</div>
-                </div></a>
-            </div>
-        </div>
-
-        <div id="tab_content">
-
-        </div>
 	</div>
 
 <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
@@ -58,7 +44,7 @@
 
 
 $(function(){
-      $.get($SCRIPT_ROOT+"/_getcardgroup",
+      $.get($SCRIPT_ROOT+"/_editcardgroup",
       {
         user_id:{{user_id}}
       },
