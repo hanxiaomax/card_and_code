@@ -1,7 +1,7 @@
 #coding:utf-8
 from flask import render_template,request,redirect,url_for,jsonify,make_response,g,session
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from models import Contact,User,Ship_Address
+from models import Contact,User,Ship_Address,Groups
 from app import app,db
 import os
 import json
@@ -225,15 +225,29 @@ def shipway(user_id):
 
 @app.route('/user<int:user_id>_cardholder/')
 def cardholder(user_id):
-
-
     Tools.getCards_Group(user_id)
     return render_template("cardholder.html",user_id=user_id)
 
-@app.route('/_getcardgroup/')
-def getcardgroup():
+@app.route('/_savegroup/')
+def savegroup():
     user_id=request.args.get('user_id')
-    return jsonify(Tools.getCards_Group(user_id))
+    groupname=request.args.get('groupname')
+    g=Groups(groupname=groupname,user_id=user_id)
+    db.session.add(g)
+    db.session.commit()
+    return " "
+
+@app.route('/_editcardgroup/')
+def editcardgroup():
+    user_id=request.args.get('user_id')
+    if request.args.get('type')=="delete":
+        groupname=request.args.get('groupname')
+        g=Groups.query.filter(db.and_(Groups.groupname==groupname,Groups.user_id==user_id)).first()
+        db.session.delete(g)
+        db.session.commit()
+        return " "
+    else:
+        return jsonify(Tools.getCards_Group(user_id))
 
 @app.route('/user<int:user_id>_editgroup/')
 def editgroup(user_id):
@@ -285,3 +299,8 @@ def cardback(user_id):
         return redirect(url_for("editcard",user_id=user_id))
 
     return render_template("cardback.html",user_id=user_id)
+
+#需要授权
+@app.route('/user<int:user_id>_show/')
+def show(user_id):
+    return render_template("show.html",user_id=user_id)

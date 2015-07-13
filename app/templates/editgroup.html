@@ -25,6 +25,14 @@
   vertical-align: middle;
   font-size: 18px;
 }
+.icon{
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  vertical-align: middle;
+  font-size: 18px;
+  color: #CC0033 ;
+}
 p{
   margin-bottom: 0px;
 }
@@ -73,13 +81,8 @@ p{
   </head>
   <body>
     <div class="container ">
-      <div class="row">
-        <div class="group_row" >
-        <p class="lable">重要</p>
-        </div>
-        <div class="group_row">
-        <p class="lable">重要</p>
-        </div>
+      <div class="row" id="groups">
+
       </div>
       <div class="row gray">
 
@@ -108,7 +111,7 @@ p{
                                     <button class="btn btn-default btn-right" data-dismiss="modal">取消</button>
                 </div>
                 <div class="width-50 pull-left ">
-                                    <button class="btn btn-default btn-left" onclick="finish(this)">确定</button>
+                                    <button class="btn btn-default btn-left" data-dismiss="modal" onclick="finish(this)">确定</button>
                 </div>
             </div>
         </div>
@@ -124,20 +127,56 @@ p{
       $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>
     <script type="text/javascript">
+    $(function(){
+      update()
+    })
+    function update (argument) {
+      $("#groups").empty()
+      $.get($SCRIPT_ROOT+"/_editcardgroup",
+      {
+        user_id:{{user_id}},
+        type:"update"
+      },
+      function(data){
+        var index=0
+        $.each(data,function(groupname,v){
+            var div="<div class='group_row' onclick=''><p class='width-90 pull-left lable'>"+groupname+"</p><span id='del-btn' class='width-10 pull-right icon icon-delete '></span></div>"
+            $("#groups").append(div)
+        })
+      });
+    }
+
+    $(".container").on("click","span[id='del-btn']",function(){
+          var p = $(this).parents(".group_row");
+          p.remove()
+          $.get($SCRIPT_ROOT+"/_editcardgroup",
+          {
+            user_id:{{user_id}},
+            groupname:$(this).prev().text(),
+            type:"delete"
+          },
+          function(data){
+            update()
+          });
+    });
+
     $("#btn-clear").bind("click", function(){
       $("#input").val("");
       $("img").attr('src',"{{url_for('static',filename='images/placeholder.png')}}");
     });
 
-    function finush (argument) {
+    function finish (argument) {
       $.get($SCRIPT_ROOT+"/_savegroup/",
       {
-        user_id:{{user_id}}
-        newgroup:$("#")
+        user_id:{{user_id}},
+        groupname : $("input[type='newgroup']").val()
       },
       function(){
-
+        update()
       });
+    }
+    function edit (argument) {
+      // body...
     }
     </script>
   </body>

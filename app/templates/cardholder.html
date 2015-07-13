@@ -32,15 +32,11 @@
 		</div>
         <div class = "tab-bg">
             <ul id='tabnav'>
-            <li class='active' id="tab"><a  href="#a" >全部</a></li>
-            <li  id="tab"><a  href="#b" >重要</a></li>
-            <li id="tab"><a  href="#c"  >客户</a></li>
-            <li id="tab"><a href="#d"   >亲友</a></li>
-            <li  id="tab" ><a href="#e" >外卖</a></li>
+
             </ul>
 
             <div class = "name-edit">
-                <a href=""><div class = "edit-position">
+                <a href={{url_for('editgroup',user_id=user_id)}}><div class = "edit-position">
                     <div><span class="icon-edit"></span></div>
                     <div class = "edit-group">编辑分组</div>
                 </div></a>
@@ -48,23 +44,7 @@
         </div>
 
         <div id="tab_content">
-            <div id="a" class="content">
-                <div class = "abc">Y </div>
-                <a href="mycard.html"><div class = "name-item">
-                    <div class="name-img"><img style="width:55px;height:55px" src="images/tairy1.jpg"></div>
-                    <div class="name-head">Tairy</div>
-                    <div class="name-job">东南大学|学生</div>
-                </div></a>
-                <div class = "name-item">
-                    <div class="name-img"><img style="width:55px;height:55px" src="images/portrait.jpg"></div>
-                    <div class="name-head">姓名示例</div>
-                    <div class="name-job">公司|职位</div>
-                </div>
-            </div>
-            <div id="b" class="content">bbbbb  </div>
-            <div id="c" class="content">cccccc  </div>
-            <div id="d" class="content">dddd  </div>
-            <div id="e" class="content">eeee  </div>
+
         </div>
 	</div>
 
