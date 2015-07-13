@@ -1,7 +1,7 @@
 #coding:utf-8
 from flask import render_template,request,redirect,url_for,jsonify,make_response,g,session
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from models import Contact,Friend_Ship,User,Ship_Address
+from models import Contact,User,Ship_Address
 from app import app,db
 import os
 import json
@@ -223,7 +223,21 @@ def shipway(user_id):
     return render_template("shipway.html",user_id=user_id)
 
 
+@app.route('/user<int:user_id>_cardholder/')
+def cardholder(user_id):
 
+
+    Tools.getCards_Group(user_id)
+    return render_template("cardholder.html",user_id=user_id)
+
+@app.route('/_getcardgroup/')
+def getcardgroup():
+    user_id=request.args.get('user_id')
+    return jsonify(Tools.getCards_Group(user_id))
+
+@app.route('/user<int:user_id>_editgroup/')
+def editgroup(user_id):
+    return render_template("editgroup.html",user_id=user_id)
 
 @app.route('/_saveShipAddress/')
 def saveShipAddress():

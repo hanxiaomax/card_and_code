@@ -9,9 +9,6 @@ class User(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     username = db.Column(db.String(32),index = True,unique = True)
     password = db.Column(db.String(32),index = True)
-    friendship = db.relationship('Friend_Ship',backref='user',lazy = 'dynamic')
-    contact = db.relationship('Contact',backref='user',lazy = 'dynamic')
-    shipAddress = db.relationship('Ship_Address',backref='user',lazy = 'dynamic')
     position = db.Column(db.String(32),index = True)
     corp = db.Column(db.String(32),index = True)
     name = db.Column(db.String(32),index = True)
@@ -19,6 +16,10 @@ class User(db.Model):
     headpic = db.Column(db.String(128),index = True)
     logo = db.Column(db.String(128),index = True)
     logoText = db.Column(db.String(128),index = True)
+    cards = db.relationship('Cards',backref='user',lazy = 'dynamic')
+    contact = db.relationship('Contact',backref='user',lazy = 'dynamic')
+    shipAddress = db.relationship('Ship_Address',backref='user',lazy = 'dynamic')
+    groups = db.relationship('Groups',backref='user',lazy = 'dynamic')
 
     def is_authenticated(self):
         return True
@@ -35,7 +36,6 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % (self.name)
 
-
     @classmethod
     def addUser(cls,username):
         u=User(username=username,name="",corp="",position="")
@@ -44,30 +44,27 @@ class User(db.Model):
         user_id=u.id
         db.session.commit()
         return user_id
-
     @classmethod
     def deleteUser(cls,username):
         u=cls.isExist(username)
         if u :
             for i in u.contact.all():
                 db.session.delete(i)
-            for i in u.friendship.all():
+            for i in u.cards.all():
                 db.session.delete(i)
             for i in u.shipAddress.all():
+                db.session.delete(i)
+            for i in u.groups.all():
                 db.session.delete(i)
             db.session.delete(u)
             db.session.commit()
             return True
         else:
             return False
-
-
     @classmethod
     def isExist(cls,username):
         user = cls.query.filter(db.or_(User.username==username)).first()
         return user if user else False
-
-
     @classmethod
     def getUser(cls,id):
         user = cls.query.filter(db.or_(User.id==id)).first()
@@ -92,9 +89,13 @@ class User(db.Model):
             db.session.delete(c)
         db.session.commit()
 
+    @classmethod
+    def getGroups(cls,user_id):
+        "获取全部分组"
+        user=cls.getUser(user_id)
+        return user.groups.all()
     def makeQrcode(self,user,qrlogo=None):
-
-
+        "创建二维码"
         qr = qrcode.QRCode(
             version=5,
             error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -128,16 +129,31 @@ class User(db.Model):
             img.save(path)
         else:
             img.save(path)
-
         self.qrcode = path
         db.session.commit()
 
         return True
 
-class Friend_Ship(db.Model):
+class Groups(db.Model):
+    id = db.Column(db.Integer,primary_key = True)
+    groupname=db.Column(db.String(32))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    cards = db.relationship('Cards',backref='groups',lazy = 'dynamic')
+
+    @classmethod
+    def getCards(cls,group):
+        "获取当前分组中全部名片"
+        group=Groups.query.get(group.id)
+        return group.cards.all()
+
+
+class Cards(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
-    friend_id = db.Column(db.Integer,unique = True)
+    group_id = db.Column(db.Integer,db.ForeignKey('groups.id'))
+
+
+
 
 class Contact(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -156,5 +172,7 @@ class Ship_Address(db.Model):
 
     @classmethod
     def getAdd(cls,index):
-        print "22"
         return Ship_Address.query.filter(db.or_(cls.id==int(index))).first()
+
+
+
