@@ -222,12 +222,6 @@ def enterAddress(user_id):
 def shipway(user_id):
     return render_template("shipway.html",user_id=user_id)
 
-
-@app.route('/user<int:user_id>_cardholder/')
-def cardholder(user_id):
-    Tools.getCards_Group(user_id)
-    return render_template("cardholder.html",user_id=user_id)
-
 @app.route('/_savegroup/')
 def savegroup():
     user_id=request.args.get('user_id')
@@ -306,8 +300,8 @@ def show(user_id):
     return render_template("show.html",user_id=user_id)
 
 
-@app.route('/cardholder/', methods=['GET', 'POST'])
-def login():
+@app.route('/user<int:user_id>_cardholder/', methods=['GET', 'POST'])
+def cardholder(user_id):
     if request.method == "GET":
         query = request.args
         if query.has_key('code'):
