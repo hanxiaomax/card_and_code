@@ -21,6 +21,7 @@ class User(db.Model):
     shipAddress = db.relationship('Ship_Address',backref='user',lazy = 'dynamic')
     groups = db.relationship('Groups',backref='user',lazy = 'dynamic')
 
+    #Flask-Login 必须实现的方法
     def is_authenticated(self):
         return True
 
@@ -31,10 +32,12 @@ class User(db.Model):
         return False
 
     def get_id(self):
-        return unicode(self.id)
+        return unicode(self.id)#MUST BE UNICODE
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
+        return '<User id:%r>' % (self.id)
+
+
 
     @classmethod
     def addUser(cls,username):

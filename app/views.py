@@ -2,7 +2,7 @@
 from flask import render_template,request,redirect,url_for,jsonify,make_response,g,session
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from models import Contact,User,Ship_Address,Groups
-from app import app,db
+from app import app,db,lm
 import os
 import json
 import sqlalchemy.exc
@@ -14,6 +14,10 @@ from xml.etree import ElementTree
 import requests
 import time
 
+@lm.user_loader
+def load_user(user_id):
+    u = User.query.get(int(user_id))
+    return u
 
 
 upload_path = app.config["UPLOAD_FOLDER"]
@@ -27,8 +31,10 @@ def demo():
     username="testuser"
     User.deleteUser(username)
     user_id=User.addUser(username)
-
-    return redirect(url_for('electronic_edit',user_id=user_id))
+    user=load_user(user_id)
+    if user:
+        login_user(user)
+        return redirect(url_for('electronic_edit',user_id=user_id))
 
 
 #微信公共平台服务器地址
@@ -87,8 +93,10 @@ def login():
             u=User.isExist(str(openid))
             if not u :
                 user_id=User.addUser(openid)
+                login_user(load_user(user_id))
                 return redirect(url_for('electronic_edit',user_id=user_id))
             else:
+                login_user(u)
                 return redirect(url_for('electronic_edit',user_id=u.id))
         else:
             return "请从微信进入或访问http://microbots.club/demo/"
@@ -96,11 +104,22 @@ def login():
     if request.method == "POST":
         return render_template("login.html",id="22")
 
+@app.route('/unauthorized/',methods=['GET', 'POST'])
+@login_required
+def unauthorized():
+    return render_template("unauthorized.html")
+
+
+
+
 
 @app.route('/user<int:user_id>_edit/',methods=['GET', 'POST'])
+@login_required
 def electronic_edit(user_id):
-    if request.method == 'POST':
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
 
+    if request.method == 'POST':
         user = User.getUser(user_id)
         if user.logo and os.path.exists(user.logo):
             os.remove(user.logo)
@@ -158,7 +177,10 @@ def saveContact():
 
 
 @app.route('/user<int:user_id>_finish/')
+@login_required
 def electronic_finish(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     user = User.getUser(user_id)
     qrcode = os.path.basename(user.qrcode)
     if user.logo :
@@ -175,7 +197,10 @@ def electronic_finish(user_id):
     return render_template("electronic_finish.html",user_id=user_id,qrcode=qrcode,logo=logo,headpic=headpic)
 
 @app.route('/user<int:user_id>_card/')
+@login_required
 def card(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("card.html",user_id=user_id)
 
 @app.route('/_getCardDetail')
@@ -184,42 +209,69 @@ def _getCardDetail():
     return Tools.getcarddetail(user_id)
 
 @app.route('/user<int:user_id>_editcard/')
+@login_required
 def editcard(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("edit-fang.html",user_id=user_id)
 
 
 @app.route('/user<int:user_id>_editluxury/')
+@login_required
 def editluxury(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("edit-luxury.html",user_id=user_id)
 
 @app.route('/user<int:user_id>_editbusiness/')
+@login_required
 def editbusiness(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("edit-business.html",user_id=user_id)
 
 @app.route('/user<int:user_id>_editfashion/')
+@login_required
 def editfashion(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("edit-fashion.html",user_id=user_id)
 
 
 @app.route('/user<int:user_id>_aftercard/')
+@login_required
 def afterEditcard(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("after_edit.html",user_id=user_id)
 
 @app.route('/user<int:user_id>_makeOrder/')
+@login_required
 def makeOrder(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("makeOrder.html",user_id=user_id)
 
 @app.route('/user<int:user_id>_shipAddress/')
+@login_required
 def shipAddress(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("shipAddress.html",user_id=user_id)
 
 @app.route('/user<int:user_id>_enterAddress/')
+@login_required
 def enterAddress(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("enterAddress.html",user_id=user_id)
 
 
 @app.route('/user<int:user_id>_shipway/')
+@login_required
 def shipway(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("shipway.html",user_id=user_id)
 
 @app.route('/_savegroup/')
@@ -244,7 +296,10 @@ def editcardgroup():
         return jsonify(Tools.getCards_Group(user_id))
 
 @app.route('/user<int:user_id>_editgroup/')
+@login_required
 def editgroup(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     return render_template("editgroup.html",user_id=user_id)
 
 @app.route('/_saveShipAddress/')
@@ -273,7 +328,10 @@ def getShipAddress():
     return Tools.getAddressList(user_id)
 
 @app.route('/user<int:user_id>_cardback/',methods=["GET","POST"])
+@login_required
 def cardback(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     if request.method == "POST":
         user = User.getUser(user_id)
         if user.logo and os.path.exists(user.logo):
@@ -301,7 +359,10 @@ def show(user_id):
 
 
 @app.route('/user<int:user_id>_cardholder/', methods=['GET', 'POST'])
+@login_required
 def cardholder(user_id):
+    if user_id!=int(current_user.id):
+        return render_template("unauthorized.html")
     if request.method == "GET":
         query = request.args
         if query.has_key('code'):
