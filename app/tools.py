@@ -56,7 +56,6 @@ class Tools(object):
         for g in groups:
             cardlist=[getBrife(card.user_id) for card in Groups.getCards(g)]
             dic[g.groupname]=cardlist
-        print dic
         return dic
 
 def getBrife(user_id):
