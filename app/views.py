@@ -371,24 +371,8 @@ def show(user_id):
 def cardholder(user_id):
     if user_id!=int(current_user.id):
         return render_template("unauthorized.html")
-    if request.method == "GET":
-        query = request.args
-        if query.has_key('code'):
-            code = query.get("code")#获取用户授权code
-            appid="wx7e4cf550df5e7653"
-            AppSecret="1ddbff16c17736c5b419f5205aebf869"
-            access_token_url="https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
-            r = requests.get(access_token_url%(appid,AppSecret,code))#请求获取access_token
-            j=json.loads(r.text)#从相应对象中获取json字符串并转换为json
-            openid=j['openid']
-            username=openid
-            u=User.isExist(str(openid))
-            if not u :
-                user_id=User.addUser(openid)
-                return render_template('cardholder.html',user_id=user_id)
-            else:
-                return render_template('cardholder.html',user_id=u.id)
-        else:
-            return "请从微信进入或访问http://microbots.club/demo/"
+    
+    return render_template('cardholder.html',user_id=user_id)
+
 
 
