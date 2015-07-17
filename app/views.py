@@ -13,6 +13,13 @@ import hashlib
 from xml.etree import ElementTree
 import requests
 import time
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+handler = logging.FileHandler('debug.log')
+handler.setLevel(logging.DEBUG)
+logger.addHandler(handler)
 
 @lm.user_loader
 def load_user(user_id):
@@ -93,18 +100,23 @@ def login():
             username=openid
             u=User.isExist(str(openid))
 
-            if state==0:
-                dest=url_for('electronic_edit',user_id=user_id)
-            elif state ==1:
-                dest=url_for('cardholder',user_id=user_id)
+            
 
             if not u :
                 user_id=User.addUser(openid)
                 login_user(load_user(user_id))
-                return redirect(dest)
+                if state==0:
+                    return redirect(url_for('electronic_edit',user_id=user_id))
+                else:
+                    return redirect(url_for('cardholder',user_id=user_id))
+
             else:
                 login_user(u)
-                return redirect(dest)
+                if state==0:
+                    return redirect(url_for('electronic_edit',user_id=u.id))
+                else:
+                    return redirect(url_for('cardholder',user_id=u.id))
+
                 
         else:
             return "请从微信进入或访问http://microbots.club/demo/"
