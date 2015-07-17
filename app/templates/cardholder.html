@@ -5,54 +5,78 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>名片夹</title>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/default.css">
-  <link rel="stylesheet" type="text/css" href="css/electronic_edit.css">
-  <link rel="stylesheet" type="text/css" href="css/icomoon.css">
-  <link rel="stylesheet" type="text/css" href="css/card-nav.css">
+      <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+      <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+      <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/electronic_edit.css")}}>
+      <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+      <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/card-nav.css")}}>
 </head>
 
 <body>
 	<div class="container">
-		<div class = "tab-bg">			
+		<div class = "tab-bg">
 			<ul id='tabnav'>
-			<li class='active' id="tab"><a  href="#a" >全部</a></li>
-			<li  id="tab"><a  href="#b" >重要</a></li>
-			<li id="tab"><a  href="#c"  >客户</a></li>
-			<li id="tab"><a href="#d"   >亲友</a></li>
-			<li  id="tab" ><a href="#e" >外卖</a></li>
+
 			</ul>
 
 			<div class = "name-edit">
-				<a href=""><div class = "edit-position">
+				<a href={{url_for('editgroup',user_id=user_id)}}><div class = "edit-position">
 					<div><span class="icon-edit"></span></div>
 					<div class = "edit-group">编辑分组</div>
 				</div></a>
 			</div>
 		</div>
-		
+
 		<div id="tab_content">
-			<div id="a" class="content">
-				<div class = "abc">Y </div>
-				<a href="mycard.html"><div class = "name-item">
-					<div class="name-img"><img style="width:55px;height:55px" src="images/tairy1.jpg"></div>
-					<div class="name-head">Tairy</div>
-					<div class="name-job">东南大学|学生</div>
-				</div></a>
-				<div class = "name-item">
-					<div class="name-img"><img style="width:55px;height:55px" src="images/portrait.jpg"></div>
-					<div class="name-head">姓名示例</div>
-					<div class="name-job">公司|职位</div>
-				</div>
-			</div>
-			<div id="b" class="content">bbbbb  </div>
-			<div id="c" class="content">cccccc  </div>
-			<div id="d" class="content">dddd  </div>
-			<div id="e" class="content">eeee  </div>
-		</div> 
-	</div>  
+
+		</div>
+
+
+	</div>
+
+<script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+<script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
+<script type= "text/javascript">
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
 
 <script type="text/javascript">
+
+
+$(function(){
+      $.get($SCRIPT_ROOT+"/_editcardgroup",
+      {
+        user_id:{{user_id}}
+      },
+      function(data){
+        var index=0
+        $.each(data,function(k,v){
+            Tab(k,index)
+            content(v,index)
+            index++;
+        })
+      });
+  });
+
+function Tab (groupname,index) {
+    if(index!=0){
+       $("#tabnav").append("<li id='tab'><a href='#tab"+index+"'>"+groupname+"</a></li>")
+    }
+    else{
+        $("#tabnav").append("<li class='active' id='tab'><a href='#tab"+index+"'>"+groupname+"</a></li>")
+    }
+    $("#tab_content").append("<div id='tab"+index+"' class='content'>")
+}
+function content (content_list,index) {
+    $.each(content_list,function(i,infodic){
+        $("#tab"+index).append(makePorfile(infodic['name'],infodic['position'],infodic['corp'],infodic['headpic']))
+    })
+}
+function makePorfile (name,corp,position,pic) {
+    div="<a href='mycard.html'><div class ='name-item'><div class='name-img'><img style='width:55px;height:55px'src={{url_for('static',filename='uploads/')}}"+pic+"></div><div class='name-head'>"+name+"</div><div class='name-job'>"+corp+"|"+position+"</div></div></a>"
+    return div
+}
+
 function changeStyle(){
  this.onclick=function(){
    var list=this.parentNode.childNodes;

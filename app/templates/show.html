@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>电子名片-完成编辑</title>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/electronic_finish.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/jasny-bootstrap.min.css")}}>
+</head>
+<style type="text/css">
+.modal-backdrop.in {
+  filter: alpha(opacity=50);
+  opacity: -1.5;
+}
+#mask{
+  height:100%;
+  width:100%;
+  background:#000;
+  opacity:0.5;
+  filter:alpha(opacity=50);
+  position:absolute;
+  left:0;
+  top:0;
+  display:none;
+  color: #ffffff;
+  text-align: center;
+  font-size:23px;
+}
+
+.intro-tag{
+  font-size: 13px;
+  color: #107afd;
+  margin-bottom: 1px;
+  border-bottom: 1px solid #ddd;
+}
+.intro-value{
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+.contact-item-intro{
+  min-height: 53px;
+  width: 100%;
+  padding-top: 7px;
+  margin-bottom: 20px;
+}
+.bottom {
+  height: 48px;
+  width: 100%;
+  /*margin: 50px -15px 0px;*/
+  position: fixed;
+  bottom: 0px;
+  max-width: 768px;
+  border-top: 1px solid #ccc;
+}
+</style>
+<body>
+  <div class="container ">
+    <div class="row">
+      <div class="content-top col-xs-12">
+        <div class="width-70 pull-left">
+          <div class="width-40 pull-left div-portrait">
+          <!-- user是数据库中的一个用户，headpic，logo，qrcode是三个图像 -->
+            <img src={{url_for('static',filename="uploads/"~ headpic )}} class="img-circle portrait" />
+          </div>
+          <div class="width-60 pull-left div-basic-info">
+            <p class="name"></p>
+            <p><span class="company"></span><span class="title"></span></p>
+          </div>
+        </div>
+        <div class="width-30 pull-right">
+          <div class="small-thumb pull-right qr-thumb circle">
+            <a type="button" data-toggle="modal" data-target="#myModal-qr">
+              <img src={{url_for('static',filename="images/microbots.png")}} />
+            </a>
+          </div>
+          <div class="small-thumb pull-right">
+            <img src={{url_for('static',filename="uploads/"~ logo )}} class="img-circle" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="content-middle col-xs-12">
+        <!--  -->
+      </div>
+    </div>
+  <div class="bottom fixed-bottom">
+    <center class="width-20 pull-left block-btn ">
+      <a href={{url_for('electronic_edit',user_id=user_id)}}><span class="icon-edit icon-button2"></span></a>
+    </center>
+    <center class="width-20 pull-left block-btn ">
+      <a href="" data-toggle="modal" data-target="#mask"><span class="icon-share icon-button2" ></span></a>
+    </center>
+    <center class="width-60 pull-left block-btn-primary ">
+      <a href={{url_for('card',user_id=user_id)}}>制作纸质名片 &gt;</a>
+    </center>
+  </div>
+  </div>
+
+  <!-- modal -->
+  <div class="modal fade" id="myModal-qr" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <div class="width-40 pull-left div-portrait">
+            <img src={{url_for('static',filename="uploads/"~ headpic  )}} class="img-circle portrait" />
+          </div>
+          <div class="width-50 pull-left div-basic-info">
+            <p class="name" id="modal-name">杨宝玲</p>
+            <p><span class="company" id="modal-corp">东南大学</span><span class="title" id="modal-position">学生</span></p>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <center class="modal-body">
+          <img src={{url_for('static',filename="qrcodes/"~ qrcode )}} />
+        </center>
+        <div class="modal-footer">
+          <p>扫一扫获得电子名片。长按保存二维码，可打印于名片、工卡等任何地方。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="mask" class="modal" >
+    <div class="width-100 ">
+      <img class="pull-right" src={{url_for('static',filename="images/分享箭头.png")}}>
+    </div>
+    <div class="width-100 pull-right">
+      <center><p class="width-50 col-md-3 col-md-offset-3">点击右上角的分享按钮进行分享</p></center>
+
+
+    </div>
+
+  </div>
+
+  <script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+  <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
+
+<script type= "text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
+
+  <script type="text/javascript">
+  $(function(){
+      $.get($SCRIPT_ROOT + "/_getCardDetail",
+        {
+          user_id : {{user_id}}
+        },
+        function(data){
+          buildForm(data)
+      });
+  });
+  function buildForm (data) {
+          //基本信息
+          var name = data.name
+          var corp = data.corp
+          var position = data.position
+          $(".content-top").find(".name").text(name)
+          $(".content-top").find(".company").text(corp)
+          $(".content-top").find(".title").text(position)
+          $("#modal-name").text(name)
+          $("#modal-corp").text(corp)
+          $("#modal-position").text(position)
+          //联系方式
+          $.each(data.info,function(){
+            var type = this.type
+            var title = this.title
+            var text = this.text
+            $(".form-group-collapse:eq("+this.index+")").find(".form-control").val(this.text)
+            switch(type)
+            {
+              case "phone":
+                addItemWithIcon(title,text,["icon-phone","icon-message"]);
+                break;
+              case "email":
+                addItemWithIcon(title,text,["icon-mail"]);
+                break;
+              case "address":
+                addItemWithIcon(title,text,["icon-address"]);
+                break;
+              case "link":
+                addItemWithIcon(title,text,["icon-link"]);
+                break;
+              default:
+                addItem(title,text);
+                break;
+            }
+          })
+          //个人简介
+          $.each(data.intro,function(){
+            var introTitle = this.title
+            var introText = this.text
+            if (introTitle||introText) {
+            addIntro(introTitle,introText)
+            };
+          });
+          $.each(data.custom,function(){
+            var title  = this.title
+            var text  = this.text
+            addCustom(title,text)
+          });
+       }
+
+  function close (argument) {
+    $('#mask').modal('hide')
+  }
+  //添加个人简介函数
+  function addIntro(title,text){
+      $(".content-middle").append("<div class='contact-item-intro' style='margin-top:20px;'><div class='pull-left width-100'><p class='intro-tag'>"+title+"</p><p class='intro-value'>"+text+"</p></div>");
+  }
+  //添加自定义文本函数
+  function addCustom(title,text){
+    $(".content-middle").append("<div class='contact-item-intro' style='margin-top:20px;'><div class='pull-left width-100'><p class='intro-tag'>"+title+"</p><p class='intro-value'>"+text+"</p></div>");
+  }
+  //添加联系方式项目（有图标）
+  function addItemWithIcon (title,text,icon) {
+    var icon1=icon[0];
+    var icon2=icon[1];
+    $(".content-middle").append("<div class='contact-item-basic'><div class='pull-left width-70'><p class='item-tag'>"+title+"</p><p class='item-value'>"+text+"</p></div><div class='pull-right width-30 icon-group'><div class='pull-right div-icon-link'><a href='' class='"+icon1+" icon-button' id='icon1'></a></div><div class='pull-right div-icon-link'><a href='' class='"+icon2+" icon-button' id='icon2'></a></div></div><div class='clear'></div></div>");
+
+  }
+  //添加联系方式项目（无）
+  function addItem (title,text) {
+    $(".content-middle").append("<div class='contact-item-basic'><div class='pull-left width-70'><p class='item-tag'>"+title+"</p><p class='item-value'>"+text+"</p></div><div class='pull-right width-30 icon-group'><div class='pull-right div-icon-link'></div><div class='pull-right div-icon-link'></div></div><div class='clear'></div></div>")
+
+  }
+  if ($(".container").height()<600) {
+    $(".bottom").css("bottom","0px")
+  };
+  </script>
+
+</body>
+</html>

@@ -8,13 +8,17 @@
     <!-- ↓ 标题 -->
     <title>编辑模板</title>
     <!-- ↓ 默认引用bootstrap、icomoon字体以及default样式 -->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/icomoon.css">
-    <link rel="stylesheet" type="text/css" href="css/card.css">
-    <link rel="stylesheet" type="text/css" href="css/default.css">
-    <link rel="stylesheet" type="text/css" href="css/edit.css">
-	<script src="js/jquery-1.10.2.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+
+
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/default.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/card.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/icomoon.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for('static',filename="css/edit.css")}}>
+
+
+	<script src={{url_for('static',filename="js/jquery-1.10.2.js")}}></script>
+  <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
 
     <!-- ↓ 自定义css，名称最好和html相同 -->
 
@@ -24,18 +28,17 @@
      <!--  <div class="row"> -->
         <div class="describe-text">正面(暂用于示例，不可编辑)</div>
         <div class="container-front ">
-           <img src="images/templates/纸质名片模板-奢华-0.png">
-           
+           <img src={{url_for('static',filename="images/templates/纸质名片模板-奢华-0.png")}}>
+
 		</div>
         <!-- </div> -->
 
       <!-- <div class="row"> -->
-      <div class="describe-text">反面(暂用于示例，不可编辑)</div>
-        <div class="container-back ">
-           
-                   <img src="images/templates/纸质名片模板-奢华-1.png">
-				
-		</div>
+      <div class="describe-text">反面(暂用于示例，不可编辑)
+      </div>
+      <div class="container-back ">
+          <img src={{url_for('static',filename="images/templates/纸质名片模板-奢华-1.png")}}>
+      </div>
 			<!-- </div> -->
         <div class="content-bottom1">
         <!--  <a href="after_edit.html"> --><center class="width-100 ">
@@ -47,7 +50,7 @@
 
 
     <!-- ↓jQuery和bootstrap的js效果，请保留，顺序不动 -->
-   
+
 
   </body>
 </html>
