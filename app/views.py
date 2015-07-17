@@ -83,6 +83,7 @@ def login():
         query = request.args
         if query.has_key('code'):
             code = query.get("code")#获取用户授权code
+            state = query.get("state")#0 to edit ,1 to cardholder
             appid="wx7e4cf550df5e7653"
             AppSecret="1ddbff16c17736c5b419f5205aebf869"
             access_token_url="https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
@@ -91,13 +92,20 @@ def login():
             openid=j['openid']
             username=openid
             u=User.isExist(str(openid))
+
+            if state==0:
+                dest=url_for('electronic_edit',user_id=user_id)
+            elif state ==1:
+                dest=url_for('cardholder',user_id=user_id)
+
             if not u :
                 user_id=User.addUser(openid)
                 login_user(load_user(user_id))
-                return redirect(url_for('electronic_edit',user_id=user_id))
+                return redirect(dest)
             else:
                 login_user(u)
-                return redirect(url_for('electronic_edit',user_id=u.id))
+                return redirect(dest)
+                
         else:
             return "请从微信进入或访问http://microbots.club/demo/"
 
