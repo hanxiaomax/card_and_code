@@ -83,7 +83,7 @@ def login():
         query = request.args
         if query.has_key('code'):
             code = query.get("code")#获取用户授权code
-            state = query.get("state")#0 to edit ,1 to cardholder
+            state = int(query.get("state"))#0 to edit ,1 to cardholder
             appid="wx7e4cf550df5e7653"
             AppSecret="1ddbff16c17736c5b419f5205aebf869"
             access_token_url="https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
