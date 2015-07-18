@@ -35,9 +35,8 @@ def allowed_file(filename):
 #PC端演示页面
 @app.route("/demo/")
 def demo():
-    username="testuser"
-    User.deleteUser(username)
-    user_id=User.addUser(username)
+    user_id=Tools.makeFakeUser()
+    Tools.makeFakeInfo(user_id)
     user=load_user(user_id)
     if user:
         login_user(user)
