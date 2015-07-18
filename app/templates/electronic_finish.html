@@ -171,7 +171,8 @@
             var type = this.type
             var title = this.title
             var text = this.text
-            $(".form-group-collapse:eq("+this.index+")").find(".form-control").val(this.text)
+            if((title&&text!="")&&(title&&text!=" ")){
+              $(".form-group-collapse:eq("+this.index+")").find(".form-control").val(this.text)
             switch(type)
             {
               case "phone":
@@ -189,7 +190,9 @@
               default:
                 addItem(title,text);
                 break;
-            }
+            };
+            };
+            
           })
           //个人简介
           $.each(data.intro,function(){
