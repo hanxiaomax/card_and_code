@@ -115,6 +115,7 @@ class Tools(object):
         "title":u"个人简介",
         "text":"热爱互联网的设计师"
         }
+        user = User.getUser(user_id)
         user.headpic = os.path.join(upload_path, "fake_headpic.png")
         user.logo = os.path.join(upload_path,"fake_logo.png")
         user.qrcode = os.path.join(upload_path,"fake_qrcode.png")
