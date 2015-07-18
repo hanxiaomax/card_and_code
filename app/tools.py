@@ -1,6 +1,6 @@
 #coding:utf-8
 from flask import render_template,request,redirect,url_for,jsonify
-from models import User,Groups
+from models import User,Groups,Contact
 from app import app,db
 import os
 
@@ -82,32 +82,38 @@ class Tools(object):
         {
         "type":"phone",
         "title":u"手机",
-        "text":"15250411234"
+        "text":"15250411234",
+        "index":"0"
         },
         {
         "type":"phone",
         "title":u"电话",
-        "text":"6656123"
+        "text":"6656123",
+        "index":"1"
         },
         {
         "type":"mail",
         "title":u"邮箱",
-        "text":"yang.bl@qq.com"
+        "text":"yang.bl@qq.com",
+        "index":"2"
         },
         {
         "type":"link",
         "title":u"网址",
-        "text":"http://oriental13.lofter.com"
+        "text":"http://oriental13.lofter.com",
+        "index":"3"
         },
         {
         "type":"address",
         "title":u"地址",
-        "text":"上海"
+        "text":"上海",
+        "index":"4"
         },
         {
         "type":"social",
         "title":u"微信",
-        "text":"abao"
+        "text":"abao",
+        "index":"5"
         }
         ]
         intro={
@@ -121,13 +127,15 @@ class Tools(object):
         user.qrcode = os.path.join(upload_path,"fake_qrcode.png")
 
 
-        c = Contact(_type = intro["type"] ,title = intro["title"] , text = intro["text"],user_id=user_id )
-        db.session.add(c)
-        for i in info:
-            c = Contact(_type = i["type"] ,title = i["title"] , text = i["text"],index = i["index"] ,user_id=user_id )
-            db.session.add(c)
+        # c = Contact(_type = intro["type"] ,title = intro["title"] , text = intro["text"],user_id=user_id )
+        # db.session.add(c)
+        # print "@@@"
+        # for i in info:
+        #     c = Contact(_type = i["type"] ,title = i["title"] , text = i["text"],index = i["index"] ,user_id=user_id )
+        #     db.session.add(c)
+        print "22"
         db.session.commit()
-
+        print "####"
 
 
 

@@ -36,13 +36,13 @@ def allowed_file(filename):
 @app.route("/demo/")
 def demo():
     User.deleteUser("testuser")
-    user_id=Tools.makeFakeUser()
-    Tools.makeFakeInfo(user_id)
-    user=load_user(user_id)
-    if user:
-        login_user(user)
-        return redirect(url_for('electronic_edit',user_id=user_id))
-
+    # user_id=Tools.makeFakeUser()
+    # Tools.makeFakeInfo(user_id)
+    # user=load_user(user_id)
+    # if user:
+    #     login_user(user)
+    #     return redirect(url_for('electronic_edit',user_id=user_id))
+    return "建设中"
 
 #微信公共平台服务器地址
 @app.route('/',methods=['GET', 'POST'])
