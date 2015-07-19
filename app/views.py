@@ -35,8 +35,12 @@ def allowed_file(filename):
 #PC端演示页面
 @app.route("/demo/")
 def demo():
-    return app.send_static_file('/demo/electronic_edit.html')
-    # return "建设中"
+    try:
+        return redirect("https://microbots.github.io/")
+    except Exception, e:
+        return "建设中"
+    
+    
 
 #微信公共平台服务器地址
 @app.route('/',methods=['GET', 'POST'])
