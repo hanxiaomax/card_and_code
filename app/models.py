@@ -47,6 +47,7 @@ class User(db.Model):
         user_id=u.id
         db.session.commit()
         return user_id
+        
     @classmethod
     def deleteUser(cls,username):
         u=cls.isExist(username)
